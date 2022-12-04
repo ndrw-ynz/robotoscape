@@ -1,6 +1,7 @@
 package menu;
 
 import gamestate.GameState;
+import loading.LoadingPhase;
 import main.Game;
 import utility.Atlas;
 
@@ -76,6 +77,7 @@ public class Menu {
     public void updateState() {
         if(startText.getIsActive()) {
             GameState.state = GameState.PLAY;
+            LoadingPhase.phase = LoadingPhase.INIT;
         } else if (creditsText.getIsActive()) {
             // Change game state to credits
         } else if (exitText.getIsActive()) {

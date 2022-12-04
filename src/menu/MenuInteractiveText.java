@@ -17,8 +17,7 @@ public class MenuInteractiveText extends MenuText{
     private Color color;
     /**The condition of the text as it is active when the mouse is overing the text.*/
     private boolean isActive;
-    /**Counter used to create blinking effect as text is active.*/
-    private float blinkingCounter;
+
 
     /**
      * MenuInteractiveText | Initializes the text with interactive properties displayed

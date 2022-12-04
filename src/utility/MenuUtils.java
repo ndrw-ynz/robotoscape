@@ -6,7 +6,7 @@ import java.awt.*;
  * MenuUtils is a class containing utility methods for
  * use in the menu state of the game.
  */
-public class MenuUtils {
+public abstract class MenuUtils {
 
     /**
      * isWithinBoundary checks if the given cartesian coordinate position of the mouse
