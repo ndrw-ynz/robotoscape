@@ -1,5 +1,6 @@
 package level;
 
+import main.Game;
 import utility.Atlas;
 
 import java.awt.*;
@@ -10,6 +11,8 @@ import java.awt.image.BufferedImage;
  * about the structure of an instance of a  game level.
  */
 public class Level {
+    /**Comprises the entire component of the game and manages its states.*/
+    private final Game game;
 
     /**The level number of a level.*/
     private final int levelNumber;
@@ -21,13 +24,18 @@ public class Level {
     private final int levelHeightTiles;
     /**Contains the respective tile data for each row,col-coordinate tile in the game.*/
     private int[][] levelData;
+    /**The x-coordinate position of the player based on the level image.*/
+    private int playerXPosition;
+    /**The y-coordinate position of the player based on the level image.*/
+    private int playerYPosition;
 
     /**
      * Level | Initializes a level and its attributes and
      * data based on the level number.
      * @param levelNumber The level number of a level.
      */
-    public Level(int levelNumber) {
+    public Level(Game game, int levelNumber) {
+        this.game = game;
         this.levelNumber = levelNumber;
         String levelFile = "levels/level" + levelNumber + ".png";
         this.levelImage = Atlas.getSpriteAtlas(levelFile);
@@ -56,6 +64,10 @@ public class Level {
                     levelData[row][col] = 0;
                 } else {
                     levelData[row][col] = color.getRed() + color.getGreen();
+                }
+                if (blue == 255 && red + green + blue == 255) {
+                    playerXPosition = game.getTileSize()*col;
+                    playerYPosition = game.getTileSize()*row;
                 }
             }
         }
@@ -89,8 +101,28 @@ public class Level {
     }
 
     /**
+     * getLevelDimension | Fetches the width,height dimension of the level.
+     * @return Returns the dimension of the level containing its width and height.
+     */
+    public Dimension getLevelDimension() {return new Dimension(levelWidthTiles * game.getTileSize(), levelHeightTiles * game.getTileSize());}
+
+    /**
      * getLevelNumber | Fetches the level number of the level.
      * @return Returns the level number of the level.
      */
     public int getLevelNumber() {return levelNumber;}
+
+    /**
+     * getPlayerXPosition | Fetches the x-coordinate position of the player based
+     * on the level.
+     * @return Returns the x-coordinate position of the player.
+     */
+    public int getPlayerXPosition() {return playerXPosition;}
+
+    /**
+     * getPlayerYPosition | Fetches the y-coordinate position of the player
+     * based on the level.
+     * @return Returns the y-coordinate position of the player.
+     */
+    public int getPlayerYPosition() {return playerYPosition;}
 }

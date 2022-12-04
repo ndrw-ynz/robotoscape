@@ -26,7 +26,7 @@ public class LevelManager {
      */
     public LevelManager(Game game) {
         this.game = game;
-        this.currentLevel = new Level(1);
+        this.currentLevel = new Level(game, 1);
         this.tileManager = new TileManager();
     }
 

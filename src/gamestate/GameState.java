@@ -9,7 +9,9 @@ public enum GameState {
     /**The menu state of the game.*/
     MENU,
     /**The play state of the game.*/
-    PLAY;
+    PLAY,
+    /**The credit state of the game.*/
+    CREDITS;
     /**Keeps track of the current state of the game.*/
     public static GameState state = MENU;
 }

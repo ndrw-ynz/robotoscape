@@ -3,6 +3,7 @@ package main;
 import gamestate.GameState;
 import gamestate.MenuState;
 import gamestate.PlayState;
+import loading.LoadingPhase;
 
 import java.awt.*;
 
@@ -11,18 +12,36 @@ import java.awt.*;
  * game and their configurations.
  */
 public class Game implements Runnable{
+    /**The panel of the game where the components of different game states are displayed.*/
     private final GamePanel gamePanel;
+    /**The pre-determined updates-per-second of the game.*/
+    private int UPS = 200;
+    /**The pre-determined frames-per-second of the game.*/
+    private int FPS = 120;
+    /**The pre-determined size of sprites in the game.*/
     protected final int BIT_SIZE = 16;
+    /**The pre-determined maximum number of columns containing tiles/entities in the screen.*/
     protected final int MAX_SCREEN_COL = 30;
+    /**The pre-determined maximum number of rows containing tiles/entities in the screen.*/
     protected final int MAX_SCREEN_ROW = 16;
+    /**The pre-determined screen width of the game window.*/
     protected final int SCREEN_WIDTH = BIT_SIZE * MAX_SCREEN_COL * 3; // 1440 pixels
+    /**The pre-determined screen height of the game window.*/
     protected final int SCREEN_HEIGHT = BIT_SIZE * MAX_SCREEN_ROW * 3; // 768 pixels
+    /**The pre-determined scaling factor for displaying tiles in the game.*/
     protected final int TILE_SCALE = 2;
+    /**The pre-determined scaling factor for displaying entities in the game.*/
     protected final int ENTITY_SCALE = 2;
+    /**The pre-determined size of tiles displayed in the game.*/
     protected final int TILE_SIZE = BIT_SIZE * TILE_SCALE; // 32 x 32 tile size
+    /**The pre-determined size of entities displayed in the game.*/
     protected final int ENTITY_SIZE = BIT_SIZE * ENTITY_SCALE; // 32 x 32 tile size
+    /**The state containing the state and behavior for the play state of the game.*/
     private PlayState playState;
+    /**The state containing the state and behavior for the menu state of the game.*/
     private MenuState menuState;
+    /**Stores the current time of the game in nanoseconds.*/
+    private long gameTime;
 
     /**
      * Game | Comprises the entire component of the game and manages its states.
@@ -57,14 +76,15 @@ public class Game implements Runnable{
      */
     public void renderGame(Graphics graphics) {
         switch (GameState.state) {
-            case MENU:
-                menuState.render(graphics);
-                break;
-            case PLAY:
+            case MENU -> menuState.render(graphics);
+            case PLAY -> {
+                if (LoadingPhase.phase == LoadingPhase.INIT) {
+                    playState.initLoading();
+                }
                 playState.render(graphics);
-                break;
-            default:
-                break;
+            }
+            default -> {
+            }
         }
     }
 
@@ -73,11 +93,13 @@ public class Game implements Runnable{
      */
     public void updateGame(){
         switch (GameState.state) {
-            case MENU:
-                menuState.update();
-                break;
-            case PLAY:
+            case MENU -> menuState.update();
+            case PLAY -> {
+                if (LoadingPhase.phase == LoadingPhase.INIT) {
+                    playState.initLoading();
+                }
                 playState.update();
+            }
         }
     }
 
@@ -95,9 +117,7 @@ public class Game implements Runnable{
     @Override
     public void run() {
 
-        int FPS = 120;
         double timePerFrame = 1000000000.0 / FPS;
-        int UPS = 200;
         double timePerUpdate = 1000000000.0 / UPS;
 
         long previousTime = System.nanoTime();
@@ -109,8 +129,10 @@ public class Game implements Runnable{
         double deltaU = 0;
         double deltaF = 0;
 
+        //noinspection InfiniteLoopStatement
         while (true) {
             long currentTime = System.nanoTime();
+            gameTime = System.nanoTime();
 
             deltaU += (currentTime - previousTime) / timePerUpdate;
             deltaF += (currentTime - previousTime) / timePerFrame;
@@ -137,6 +159,12 @@ public class Game implements Runnable{
             }
         }
     }
+
+    /**
+     * getUPS | Fetches the UPS of the game.
+     * @return Returns the UPS of the game.
+     */
+    public int getUPS() {return UPS;}
 
     /**
      * getPlayingState | Fetches the playing state of the game.
@@ -175,4 +203,11 @@ public class Game implements Runnable{
      * getTileSize | Fetches the size of tiles in the game.
      * @return Returns the size of tiles in the game.
      */
-    public int getTileSize() {return TILE_SIZE;}}
+    public int getTileSize() {return TILE_SIZE;}
+
+    /**
+     * getGameTime | Fetches the current game time in nanoseconds.
+     * @return Returns the current game time in nanoseconds.
+     */
+    public long getGameTime() {return gameTime;}
+}
