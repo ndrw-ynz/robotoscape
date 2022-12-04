@@ -47,11 +47,11 @@ public class Player extends Entity {
      * @param entityScale The scale value scaling the appearance of the player.
      */
     public Player(int x, int y, int bitWidth, int bitHeight, int entityScale) {
-        super(x, y, bitWidth, bitHeight, entityScale);
+        super(x, y-13, bitWidth, bitHeight, entityScale); // -13 on y for allowance as it spawns so it doesn't possibly clip on floor.
         movementSpeed = 2;
         facingRight = true;
         animationCounter = 0;
-        animationState = "active"; // TODO: HANDLE ANIMS!
+        animationState = "active";
         getPlayerImage();
         updateHitBox();
         isOnAir = true;
@@ -101,7 +101,7 @@ public class Player extends Entity {
                 hitBoxHeight = 22;
             }
             case "dash" -> {
-                // TODO: CONFIGURE THIS LATER
+                // TODO: Configure how dash animation is displayed.
                 hitBoxWidth = 21;
                 hitBoxHeight = 23;
                 xHitBoxDelta = 28;
@@ -110,8 +110,8 @@ public class Player extends Entity {
             case "death" -> {
             }
         }
-        hitBox.x = xPos + xHitBoxDelta;
-        hitBox.y = yPos + yHitBoxDelta;
+        hitBox.x = xPosition + xHitBoxDelta;
+        hitBox.y = yPosition + yHitBoxDelta;
         hitBox.width = hitBoxWidth;
         hitBox.height = hitBoxHeight;
    }
@@ -141,18 +141,18 @@ public class Player extends Entity {
                 }
             }
             if (!isOnAir) {
-                isOnAir = !isEntityOnFloor(xPos, yPos, this, level, tileManager);
+                isOnAir = !isEntityOnFloor(xPosition, yPosition, this, level, tileManager);
             }
 
             // if cant move, there must be extra space between border and hitBox. calculate that space and set as xSpeed.
             if (isOnAir) {
                 // ON AIR. X AND Y AFFECTED.
-                if (canEntityMove(xPos, (int) (yPos+airSpeed), this, level, tileManager)) {
+                if (canEntityMove(xPosition, (int) (yPosition +airSpeed), this, level, tileManager)) {
                     // focus on up and down speed
                     ySpeed = airSpeed;
                     airSpeed += GRAVITY;
                 } else {
-                    ySpeed = getEntityYOffset(yPos + yHitBoxDelta, airSpeed);
+                    ySpeed = getEntityYOffset(yPosition + yHitBoxDelta, airSpeed);
                     if (airSpeed > 0) {
                         isOnAir = false;
                         airSpeed = 0;
@@ -162,13 +162,13 @@ public class Player extends Entity {
                 }
             }
 
-            if (!canEntityMove(xPos+xSpeed, yPos, this, level, tileManager)) {
-                xSpeed = getEntityXOffset(xPos + xHitBoxDelta, isMovingLeft);
+            if (!canEntityMove(xPosition +xSpeed, yPosition, this, level, tileManager)) {
+                xSpeed = getEntityXOffset(xPosition + xHitBoxDelta, isMovingLeft);
             }
 
-            if (canEntityMove(xPos + xSpeed, (int) (yPos + ySpeed), this, level, tileManager)) {
-                xPos += xSpeed;
-                yPos += ySpeed;
+            if (canEntityMove(xPosition + xSpeed, (int) (yPosition + ySpeed), this, level, tileManager)) {
+                xPosition += xSpeed;
+                yPosition += ySpeed;
             }
         }
     }
@@ -178,7 +178,7 @@ public class Player extends Entity {
      * with its animation states.
      */
     private void updateAnimation() {
-        // TODO: Improve this
+        // TODO: Improve how player animations are handled based on state of player.
         if (isMovingLeft || isMovingRight) {
             animationState = "move";
         } else if (isOnAir) {
@@ -213,9 +213,9 @@ public class Player extends Entity {
         int width = bitWidth*entityScale;
         int height = bitHeight*entityScale;
         if (!facingRight) {
-            graphics.drawImage(playerImage, xPos+width-xOffset,  yPos-yOffset, -width, height, null);
+            graphics.drawImage(playerImage, xPosition +width-xOffset,  yPosition -yOffset, -width, height, null);
         } else {
-            graphics.drawImage(playerImage, xPos-xOffset,  yPos-yOffset, width, height, null);
+            graphics.drawImage(playerImage, xPosition -xOffset,  yPosition -yOffset, width, height, null);
         }
         graphics.setColor(Color.GREEN);
         graphics.drawRect(hitBox.x-xOffset, hitBox.y-yOffset, hitBox.width*entityScale, hitBox.height*entityScale);
