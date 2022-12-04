@@ -11,9 +11,9 @@ import java.util.HashMap;
 public abstract class Entity {
 
     /** The x-coordinate position of the entity.*/
-    protected int xPos;
+    protected int xPosition;
     /** The y-coordinate position of the entity.*/
-    protected int yPos;
+    protected int yPosition;
     /** The width of the entity in pixels.*/
     protected int bitWidth;
     /** The height of the entity in pixels.*/
@@ -55,9 +55,9 @@ public abstract class Entity {
      */
     protected int yHitBoxDelta;
 
-    public Entity(int xPos, int yPos, int bitWidth, int bitHeight, int entityScale) {
-        this.xPos = xPos;
-        this.yPos = yPos;
+    public Entity(int xPosition, int yPosition, int bitWidth, int bitHeight, int entityScale) {
+        this.xPosition = xPosition;
+        this.yPosition = yPosition;
         this.bitWidth = bitWidth;
         this.bitHeight = bitHeight;
         this.entityScale = entityScale;
@@ -79,16 +79,16 @@ public abstract class Entity {
      * getXPos fetches the x-coordinate position of the entity.
      * @return Returns the x-coordinate position of the entity.
      */
-    public int getxPos() {
-        return xPos;
+    public int getxPosition() {
+        return xPosition;
     }
 
     /**
      * getYPos fetches the y-coordinate position of the entity.
      * @return Returns the y-coordinate position of the entity.
      */
-    public int getyPos() {
-        return yPos;
+    public int getyPosition() {
+        return yPosition;
     }
 
     /**
