@@ -1,8 +1,10 @@
 package gamestate;
 
 import entity.Player;
+import level.Level;
 import level.LevelManager;
 import loading.Loading;
+import loading.LoadingPhase;
 import main.Game;
 import main.GamePanel;
 import tile.TileManager;
@@ -21,8 +23,8 @@ import java.awt.event.MouseEvent;
  */
 public class PlayState extends State implements StateMethods {
 
-    /**The panel of the game where the components of different states are displayed.*/
-    private GamePanel gamePanel;
+    /**The panel of the game where the components of different game states are displayed.*/
+    private final GamePanel gamePanel;
     /**The player that is controlled by the user in the game.*/
     private final Player player;
     /**Manages the levels of the game and its state.*/
@@ -31,21 +33,23 @@ public class PlayState extends State implements StateMethods {
     private final TileManager tileManager;
     /**Manages the loading screen of the game as introduced before the level starts.*/
     private Loading loading;
+    /**The state of the play state, whether it's displaying loading or not.*/
+    private boolean isLoading;
     /**The offset of the player as it reaches the border on the x-axis of the game screen.*/
     private int xOffset;
-    /**The maximum value of offset in the x-axis of the game screen.*/
+    /**The maximum value of offset of the player in the x-axis of the game screen.*/
     private final int maxXOffset;
-    /**The x-coordinate for the left border on the game screen.*/
+    /**The x-coordinate for the left border of the player on the game screen.*/
     private final int leftBorder;
-    /**The x-coordinate for the right border on the game screen.*/
+    /**The x-coordinate for the right border of the player on the game screen.*/
     private final int rightBorder;
     /** The offset of the player as it reaches the border on the y-axis of the game screen.*/
     private int yOffset;
-    /**The maximum value of offset in the y-axis of the game screen.*/
+    /**The maximum value of offset of the player in the y-axis of the game screen.*/
     private final int maxYOffset;
-    /**The y-coordinate for the upper border on the game screen.*/
+    /**The y-coordinate for the upper border of the player on the game screen.*/
     private final int upBorder;
-    /**The y-coordinate for the lower border on the game screen.*/
+    /**The y-coordinate for the lower border of the player on the game screen.*/
     private final int downBorder;
 
     /**
@@ -58,10 +62,9 @@ public class PlayState extends State implements StateMethods {
     public PlayState(Game game, GamePanel gamePanel) {
         super(game);
         this.gamePanel = gamePanel;
-        player = new Player(100, 100, 36, 23, game.getEntityScale());
         levelManager = new LevelManager(game);
         tileManager = new TileManager();
-        loading = new Loading(levelManager.getCurrentLevel().getLevelNumber());
+        player = new Player(levelManager.getCurrentLevel().getPlayerXPosition(), levelManager.getCurrentLevel().getPlayerYPosition(), 36, 23, game.getEntityScale());
 
         int levelWidthTiles = levelManager.getCurrentLevel().getLevelWidthTiles();
         int levelHeightTiles =  levelManager.getCurrentLevel().getLevelHeightTiles();
@@ -81,28 +84,82 @@ public class PlayState extends State implements StateMethods {
 
     @Override
     public void render(Graphics graphics) {
-        updateOffsets();
-        player.renderPlayer((Graphics2D) graphics, xOffset, yOffset);
+        // TODO: Soon, add condition for loading state isLoading.
+        if (isLoading) {
+            loading.renderLoading(graphics, levelManager.getCurrentLevel().getLevelDimension());
+        } else {
+            updateOffsetsFromPlayer();
+            player.renderPlayer((Graphics2D) graphics, xOffset, yOffset);
+        }
         levelManager.renderLevel(graphics, xOffset, yOffset);
     }
 
     @Override
     public void update() {
-        player.updatePlayer(levelManager.getCurrentLevel(), tileManager);
+        // TODO: Soon, add condition for loading state isLoading.
+        if (isLoading) {
+            Level currentLevel = levelManager.getCurrentLevel();
+//            System.out.println("Game Time " + game.getGameTime()/1000000000.0);
+            loading.updateLoadingPhase(game.getGameTime());
+            switch(LoadingPhase.phase){
+                case START -> {
+                    loading.updateAlphaValue(false);
+                    xOffset = loading.getxLoadingPosition();
+                    yOffset = loading.getyLoadingPosition();
+                }
+                case TRANSITION -> {
+                    // Determine xOffsetSpeed and yOffsetSpeed if not yet set.
+                    if (loading.getxOffsetSpeed() == 0 && loading.getyOffsetSpeed() == 0) {
+                        loading.setOffsetSpeeds(loading.getxLoadingPosition(), loading.getyLoadingPosition(), currentLevel.getPlayerXPosition(), currentLevel.getPlayerYPosition());
+                    }
+                    updateOffsetFromLoading(loading.getxOffsetSpeed(), loading.getyOffsetSpeed());
+                }
+                case END -> {
+                    loading.updateAlphaValue(true);
+                    // wait for x seconds
+                }
+                case NONE -> {
+                     isLoading = false;
+                }
+            }
+        }
+        if (!isLoading) {
+            player.updatePlayer(levelManager.getCurrentLevel(), tileManager);
+        }
         levelManager.updateLevel();
     }
 
     /**
-     * updateOffsets | Updates the xOffset and yOffset of the player on
+     * initLoading | Initializes loading instance of the game and sets
+     * isLoading to true.
+     */
+    public void initLoading() {
+        loading = new Loading(game, levelManager.getCurrentLevel());
+        isLoading = true;
+    }
+
+    /**
+     * updateOffsetsFromLoading | Updates the xOffset and yOffset of
+     * the game based on the position of the loading text from the center
+     * of the level and the position of the player from the level.
+     */
+    private void updateOffsetFromLoading(double xOffsetSpeed, double yOffsetSpeed) {
+        System.out.println("xOffsetSpeed : " + xOffsetSpeed + " yOffsetSpeed : " + yOffsetSpeed);
+        xOffset += xOffsetSpeed;
+        yOffset += yOffsetSpeed;
+    }
+
+    /**
+     * updateOffsetsFromPlayer | Updates the xOffset and yOffset of the player on
      * the game as it moves towards the x-axis and y-axis border of the
      * game screen and applies the offset on the components of the game,
      * as it is displayed on the game screen.
      */
-    private void updateOffsets() {
+    private void updateOffsetsFromPlayer() {
         /*
 
         */
-        int playerXPos = player.getxPos()+ player.getxHitBoxDelta();
+        int playerXPos = player.getxPosition() + player.getxHitBoxDelta();
         int xDiff = playerXPos - xOffset;
 
         /*
@@ -114,7 +171,7 @@ public class PlayState extends State implements StateMethods {
         } else if (xDiff > rightBorder) {
             xOffset += xDiff - rightBorder;
         }
-        int playerYPos = player.getyPos()+ player.getyHitBoxDelta();
+        int playerYPos = player.getyPosition()+ player.getyHitBoxDelta();
         int yDiff = playerYPos - yOffset;
 
         /*
@@ -175,31 +232,19 @@ public class PlayState extends State implements StateMethods {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        switch(e.getKeyCode()) {
-            case KeyEvent.VK_SPACE:
-                player.setIsJumping(true);
-                break;
-            case KeyEvent.VK_A:
-                player.setIsMovingLeft(true);
-                break;
-            case KeyEvent.VK_D:
-                player.setIsMovingRight(true);
-                break;
+        switch (e.getKeyCode()) {
+            case KeyEvent.VK_SPACE -> player.setIsJumping(true);
+            case KeyEvent.VK_A -> player.setIsMovingLeft(true);
+            case KeyEvent.VK_D -> player.setIsMovingRight(true);
         }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        switch(e.getKeyCode()) {
-            case KeyEvent.VK_SPACE:
-                player.setIsJumping(false);
-                break;
-            case KeyEvent.VK_A:
-                player.setIsMovingLeft(false);
-                break;
-            case KeyEvent.VK_D:
-                player.setIsMovingRight(false);
-                break;
+        switch (e.getKeyCode()) {
+            case KeyEvent.VK_SPACE -> player.setIsJumping(false);
+            case KeyEvent.VK_A -> player.setIsMovingLeft(false);
+            case KeyEvent.VK_D -> player.setIsMovingRight(false);
         }
     }
 }
