@@ -5,6 +5,8 @@ import utility.Atlas;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * The Level class contains the images and data
@@ -28,6 +30,8 @@ public class Level {
     private int playerXPosition;
     /**The y-coordinate position of the player based on the level image.*/
     private int playerYPosition;
+    /**The enemies in the level and their corresponding coordinates.*/
+    private final HashMap<String, ArrayList<Point>> enemyCoordinates = new HashMap<>();
 
     /**
      * Level | Initializes a level and its attributes and
@@ -56,19 +60,78 @@ public class Level {
         levelData = new int[levelHeightTiles][levelWidthTiles];
         for (int row = 0; row < levelHeightTiles; row++) {
             for (int col = 0; col < levelWidthTiles; col++) {
+                Point coordinate = new Point(game.getTileSize()*col, game.getTileSize()*row);
                 Color color = new Color(levelImage.getRGB(col, row));
                 int red = color.getRed();
                 int green = color.getGreen();
                 int blue = color.getBlue();
-                if (red + green + blue == 765) { // if white, blank. (code not final.)
+                int rgbTotal = red+green+blue;
+                if (rgbTotal == 765) { // if white, blank tile
                     levelData[row][col] = 0;
                 } else {
                     levelData[row][col] = color.getRed() + color.getGreen();
                 }
-                if (blue == 255 && red + green + blue == 255) {
+                // Player position
+                if (blue == 255 && rgbTotal == 255) {
                     playerXPosition = game.getTileSize()*col;
                     playerYPosition = game.getTileSize()*row;
                 }
+
+                // Enemy position
+                if ((blue < 255 && blue >= 248) && (rgbTotal < 255 && rgbTotal >= 248)) {
+                    switch(rgbTotal) {
+                        // Abomination
+                        case 248 -> {
+                            if (!enemyCoordinates.containsKey("abomination")) {
+                                enemyCoordinates.put("abomination", new ArrayList<>());
+                            }
+                            enemyCoordinates.get("abomination").add(coordinate);
+                        }
+                        // Cultist
+                        case 249 -> {
+                            if (!enemyCoordinates.containsKey("cultist")) {
+                                enemyCoordinates.put("cultist", new ArrayList<>());
+                            }
+                            enemyCoordinates.get("cultist").add(coordinate);
+                        }
+                        // Drone
+                        case 250 -> {
+                            if (!enemyCoordinates.containsKey("drone")) {
+                                enemyCoordinates.put("drone", new ArrayList<>());
+                            }
+                            enemyCoordinates.get("drone").add(coordinate);
+                        }
+                        // Robot Air
+                        case 251 -> {
+                            if (!enemyCoordinates.containsKey("robot_air")) {
+                                enemyCoordinates.put("robot_air", new ArrayList<>());
+                            }
+                            enemyCoordinates.get("robot_air").add(coordinate);
+                        }
+                        // Robot Ground
+                        case 252 -> {
+                            if (!enemyCoordinates.containsKey("robot_ground")) {
+                                enemyCoordinates.put("robot_ground", new ArrayList<>());
+                            }
+                            enemyCoordinates.get("robot_ground").add(coordinate);
+                        }
+                        // Skull Slime
+                        case 253 -> {
+                            if (!enemyCoordinates.containsKey("skull_slime")) {
+                                enemyCoordinates.put("skull_slime", new ArrayList<>());
+                            }
+                            enemyCoordinates.get("skull_slime").add(coordinate);
+                        }
+                        // Turret
+                        case 254 -> {
+                            if (!enemyCoordinates.containsKey("turret")) {
+                                enemyCoordinates.put("turret", new ArrayList<>());
+                            }
+                            enemyCoordinates.get("turret").add(coordinate);
+                        }
+                    }
+                }
+
             }
         }
     }
@@ -125,4 +188,12 @@ public class Level {
      * @return Returns the y-coordinate position of the player.
      */
     public int getPlayerYPosition() {return playerYPosition;}
+
+    /**
+     * getEnemyCoordinates | Fetches the HashMap containing the coordinates of the enemies in the game level.
+     * @return Returns a HashMap<String, ArrayList<Point>> object, with its key value pair as the enemy type and the coordinates of the enemies.
+     */
+    public HashMap<String, ArrayList<Point>> getEnemyCoordinates() {
+        return enemyCoordinates;
+    }
 }
