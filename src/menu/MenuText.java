@@ -20,8 +20,6 @@ public class MenuText {
     protected final int textSize;
     /**The font family of the text.*/
     protected final Font font;
-    /**Counter used to create blinking effect on menu text.*/
-    protected float blinkingCounter;
 
     /**
      * MenuText | Initializes the text used in the menu.
@@ -43,9 +41,10 @@ public class MenuText {
      * @param screenWidth The width of the game screen in pixels.
      */
     public void renderText(Graphics graphics, int screenWidth) {
-        blinkingCounter += 0.2;
-        if (blinkingCounter > 5) blinkingCounter = 0;
-        Color color = (blinkingCounter < 2.5) ? Color.YELLOW : Color.MAGENTA;
+//        blinkingCounter += 0.2;
+//        if (blinkingCounter > 5) blinkingCounter = 0;
+//        Color color = (blinkingCounter < 2.5) ? Color.YELLOW : Color.MAGENTA;
+        Color color = Color.WHITE;
         int x = getTextCenterXPosition(text, font, graphics, screenWidth);
         graphics.setFont(font);
         graphics.setColor(color);

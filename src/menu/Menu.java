@@ -41,7 +41,7 @@ public class Menu {
         int numSelections = 3;  // The number of interactive text in selection.
         int selectionHeight = selectionsTotalHeight / numSelections; // The height for each interactive text in selection.
 
-        titleText = new MenuText(titleY, "Robotoscape", titleSize, Atlas.TARRGET_FONT); // Initializes titleText.
+        titleText = new MenuText(titleY, "robotoscape", titleSize, Atlas.TARRGET_FONT); // Initializes titleText.
         startText = new MenuInteractiveText(selectionsY, "Start", 60, Atlas.TARRGET_FONT); // Initializes startText
         creditsText = new MenuInteractiveText(selectionsY + selectionHeight, "Credits", 60, Atlas.TARRGET_FONT); // Initializes creditsText.
         exitText = new MenuInteractiveText(selectionsY + selectionHeight*2, "Exit", 60, Atlas.TARRGET_FONT); // Initializes exitText.
