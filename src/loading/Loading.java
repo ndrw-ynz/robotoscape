@@ -5,8 +5,6 @@ import main.Game;
 import utility.Atlas;
 
 import java.awt.*;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import static utility.LoadingUtils.getLoadingTextCenterXPosition;
 import static utility.LoadingUtils.getLoadingTextCenterYPosition;
@@ -57,7 +55,6 @@ public class Loading {
         loadingText = "Level " + numToText;
         loadingInitTime = game.getGameTime();
         LoadingPhase.phase = LoadingPhase.START;
-//        alphaValue = 255;
     }
 
     /**
@@ -73,7 +70,6 @@ public class Loading {
         graphics.setFont(font);
         graphics.setColor(color);
         graphics.drawString(loadingText, x, y);
-
         /*
         * Sets up xLoadingPosition and yLoadingPosition if the position hasn't been set yet.
         * This is on renderLoading because graphics is required for setting up, which is not
@@ -105,11 +101,14 @@ public class Loading {
         }
     }
 
+    /**
+     * updateAlphaValue | Updates the alphaValue of the loading text.
+     * @param transitionToOpacity The condition for if the text is transitioning to opacity.
+     */
     public void updateAlphaValue(boolean transitionToOpacity) {
         double time = transitionToOpacity ? 3 * game.getUPS() : 2 * game.getUPS(); // UPS of game x duration in second
         double speed = (255) / time;
         alphaValue += transitionToOpacity ? -speed : speed;
-//        alphaValue += speed;
         if (alphaValue < 0) alphaValue = 0;
         if (alphaValue > 255) alphaValue = 255;
         System.out.println("Speed: " + speed);
@@ -129,10 +128,10 @@ public class Loading {
         double deltaX = endX - startX;
         double deltaY = endY - startY;
         double direction = Math.toRadians(Math.atan(deltaY/deltaX));
-        double speed = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
-        System.out.println("Direction: " + direction);
-        System.out.println("cos" + Math.cos(direction));
-        System.out.println("sin" + Math.sin(direction));
+//        double speed = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
+//        System.out.println("Direction: " + direction);
+//        System.out.println("cos" + Math.cos(direction));
+//        System.out.println("sin" + Math.sin(direction));
         xOffsetSpeed = (deltaX / 6000000000.0) * Math.cos(direction); //(deltaX / 6000000000.0)
         yOffsetSpeed = (deltaY / 6000000000.0) * Math.sin(direction); //(deltaY / 6000000000.0)
     }
