@@ -12,7 +12,7 @@ import java.util.Objects;
  * in displaying the animation of the player, the tiles used in each game
  * level, and the fonts used.
  */
-public class Atlas {
+public abstract class Atlas {
 
     // PLAYER-SPECIFIC ANIMATION SPRITE ATLAS (8 Atlas)
     /**The file path for the idle status animation states of the player.*/
@@ -33,10 +33,34 @@ public class Atlas {
     public static final String PLAYER_DAMAGED = "player/damaged.png";
     /**The file path for the death status animation states of the player.*/
     public static final String PLAYER_DEATH = "player/death.png";
-    /**The file path for the monochrome tile sets used in building the levels of the game.*/
+
+    // ENEMY-SPECIFIC ANIMATION SPRITE ATLAS (10 Atlas)
+    /**The file path for the active animation state of the abomination enemy entity.*/
+    public static final String ENEMY_ABOMINATION_ACTIVE = "enemy/abomination_active.png";
+    /**The file path for the passive animation state of the abomination enemy entity.*/
+    public static final String ENEMY_ABOMINATION_PASSIVE = "enemy/abomination_passive.png";
+    /**The file path for the animation state of the cultist enemy entity.*/
+    public static final String ENEMY_CULTIST = "enemy/cultist.png";
+    /**The file path for the animation state of the drone enemy entity.*/
+    public static final String ENEMY_DRONE = "enemy/drone.png";
+    /**The file path for the animation state of the robot air enemy entity.*/
+    public static final String ENEMY_ROBOT_AIR = "enemy/robot_air.png";
+    /**The file path for the active animation state of the robot ground enemy entity.*/
+    public static final String ENEMY_ROBOT_GROUND_ACTIVE = "enemy/robot_ground_active.png";
+    /**The file path for the passive animation state of the robot ground enemy entity.*/
+    public static final String ENEMY_ROBOT_GROUND_PASSIVE = "enemy/robot_ground_passive.png";
+    /**The file path for the animation state of the skull slime enemy entity.*/
+    public static final String ENEMY_SKULL_SLIME = "enemy/skull_slime.png";
+    /**The file path for the active animation state of the turret enemy entity.*/
+    public static final String ENEMY_TURRET_CHARGING = "enemy/turret_charging.png";
+    /**The file path for the passive animation state of the turret enemy entity.*/
+    public static final String ENEMY_TURRET_PASSIVE = "enemy/turret_passive.png";
+
     // TILE SETS USED IN LEVEL-BUILDING.
+    /**The file path for the monochrome tile sets used in building the levels of the game.*/
     public static final String LEVEL_MONOCHROME_TILESET = "tiles/monochrome_tilemap_transparent_packed.png";
     /**The file path for Silver font used in the game.*/
+
     // FONTS USED IN THE GAME.
     public static final String SILVER_FONT = "fonts/Silver.ttf";
     /**The file path for Robus font used in the game.*/

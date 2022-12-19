@@ -39,7 +39,7 @@ public abstract class Entity {
     /**
      * The scaling factor of the entity as it is displayed on the game screen.
      */
-    protected int entityScale;
+    protected float entityScale;
     /**
      * The hit box of an entity.
      */
@@ -55,7 +55,16 @@ public abstract class Entity {
      */
     protected int yHitBoxDelta;
 
-    public Entity(int xPosition, int yPosition, int bitWidth, int bitHeight, int entityScale) {
+    /**
+     * Entity is the superclass of all moving and interactive entities
+     * in the levels of the game.
+     * @param xPosition The starting x-coordinate position of the player.
+     * @param yPosition The starting y-coordinate position of the player.
+     * @param bitWidth The width of the player sprite in pixels.
+     * @param bitHeight The height of the player sprite in pixels.
+     * @param entityScale The scale value scaling the appearance of the player.
+     */
+    public Entity(int xPosition, int yPosition, int bitWidth, int bitHeight, float entityScale) {
         this.xPosition = xPosition;
         this.yPosition = yPosition;
         this.bitWidth = bitWidth;
@@ -65,15 +74,48 @@ public abstract class Entity {
     }
 
     /**
+     * renderEntity | Displays the entity on the game screen.
+     * @param graphics The graphics object that draws images on the game screen.
+     * @param xOffset The x-value offset of the entity on the game screen.
+     * @param yOffset The y-value offset of the entity on the game screen.
+     */
+    public void renderEntity(Graphics2D graphics, int xOffset, int yOffset) {
+        BufferedImage playerImage = animations.get(animationState)[(int) Math.floor(animationCounter)];
+        int width = (int) (bitWidth*entityScale);
+        int height = (int) (bitHeight*entityScale);
+        if (!facingRight) {
+            graphics.drawImage(playerImage, xPosition +width-xOffset,  yPosition -yOffset, -width, height, null);
+        } else {
+            graphics.drawImage(playerImage, xPosition -xOffset,  yPosition -yOffset, width, height, null);
+        }
+        renderHitBox(graphics, xOffset, yOffset);
+//        graphics.setColor(Color.GREEN);
+//        graphics.drawRect(hitBox.x-xOffset, hitBox.y-yOffset, (int) (hitBox.width*entityScale), (int) (hitBox.height*entityScale));
+    }
+
+    /**
      * renderHitBox displays the hit box of the player on the game screen.
      * @param graphics The graphics object that draws images on the game screen.
      */
-    abstract protected void renderHitBox(Graphics2D graphics);
+    public void renderHitBox(Graphics2D graphics, int xOffset, int yOffset) {
+        graphics.setColor(Color.GREEN);
+        graphics.drawRect(hitBox.x-xOffset, hitBox.y-yOffset, (int) (hitBox.width*entityScale), (int) (hitBox.height*entityScale));
+    }
 
     /**
-     * updateHitBox updates the hit box of the player.
+     * updateHitBox updates the hit box of the entity.
      */
     abstract protected void updateHitBox();
+
+    /**
+     * getAnimationImages fetches the animation states and images of the entity.
+     */
+    abstract protected void getAnimationImages();
+
+    /**
+     * updateAnimation updates the current animation state of the entity.
+     */
+    abstract protected void updateAnimation();
 
     /**
      * getXPos fetches the x-coordinate position of the entity.
@@ -103,7 +145,7 @@ public abstract class Entity {
      * getEntityScale fetches the scale of the entity on the game.
      * @return Returns the scaling factor of the entity.
      */
-    public int getEntityScale() {
+    public float getEntityScale() {
         return entityScale;
     }
 
