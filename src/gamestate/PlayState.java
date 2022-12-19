@@ -1,5 +1,6 @@
 package gamestate;
 
+import entity.EnemyManager;
 import entity.Player;
 import level.Level;
 import level.LevelManager;
@@ -31,6 +32,9 @@ public class PlayState extends State implements StateMethods {
     private final LevelManager levelManager;
     /**Manages the tiles used in the game.*/
     private final TileManager tileManager;
+    /**Manages the enemies in the current level of the game.*/
+    private final EnemyManager enemyManager;
+
     /**Manages the loading screen of the game as introduced before the level starts.*/
     private Loading loading;
     /**The state of the play state, whether it's displaying loading or not.*/
@@ -64,6 +68,7 @@ public class PlayState extends State implements StateMethods {
         this.gamePanel = gamePanel;
         levelManager = new LevelManager(game);
         tileManager = new TileManager();
+        enemyManager = new EnemyManager(levelManager.getCurrentLevel());
         player = new Player(levelManager.getCurrentLevel().getPlayerXPosition(), levelManager.getCurrentLevel().getPlayerYPosition(), 36, 23, game.getEntityScale());
 
         int levelWidthTiles = levelManager.getCurrentLevel().getLevelWidthTiles();
@@ -89,9 +94,10 @@ public class PlayState extends State implements StateMethods {
             loading.renderLoading(graphics, levelManager.getCurrentLevel().getLevelDimension());
         } else {
             updateOffsetsFromPlayer();
-            player.renderPlayer((Graphics2D) graphics, xOffset, yOffset);
+            player.renderEntity((Graphics2D) graphics, xOffset, yOffset);
         }
         levelManager.renderLevel(graphics, xOffset, yOffset);
+        enemyManager.renderEnemies((Graphics2D) graphics, xOffset, yOffset);
     }
 
     @Override
@@ -99,7 +105,6 @@ public class PlayState extends State implements StateMethods {
         // TODO: Soon, add condition for loading state isLoading.
         if (isLoading) {
             Level currentLevel = levelManager.getCurrentLevel();
-//            System.out.println("Game Time " + game.getGameTime()/1000000000.0);
             loading.updateLoadingPhase(game.getGameTime());
             switch(LoadingPhase.phase){
                 case START -> {
@@ -127,6 +132,7 @@ public class PlayState extends State implements StateMethods {
             player.updatePlayer(levelManager.getCurrentLevel(), tileManager);
         }
         levelManager.updateLevel();
+        enemyManager.updateEnemies();
     }
 
     /**

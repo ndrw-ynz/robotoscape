@@ -15,9 +15,9 @@ public class Game implements Runnable{
     /**The panel of the game where the components of different game states are displayed.*/
     private final GamePanel gamePanel;
     /**The pre-determined updates-per-second of the game.*/
-    private int UPS = 200;
+    private final int UPS = 200;
     /**The pre-determined frames-per-second of the game.*/
-    private int FPS = 120;
+    private final int FPS = 120;
     /**The pre-determined size of sprites in the game.*/
     protected final int BIT_SIZE = 16;
     /**The pre-determined maximum number of columns containing tiles/entities in the screen.*/
@@ -31,11 +31,11 @@ public class Game implements Runnable{
     /**The pre-determined scaling factor for displaying tiles in the game.*/
     protected final int TILE_SCALE = 2;
     /**The pre-determined scaling factor for displaying entities in the game.*/
-    protected final int ENTITY_SCALE = 2;
+    protected final float ENTITY_SCALE = 2.0f;
     /**The pre-determined size of tiles displayed in the game.*/
     protected final int TILE_SIZE = BIT_SIZE * TILE_SCALE; // 32 x 32 tile size
     /**The pre-determined size of entities displayed in the game.*/
-    protected final int ENTITY_SIZE = BIT_SIZE * ENTITY_SCALE; // 32 x 32 tile size
+    protected final int ENTITY_SIZE = (int) (BIT_SIZE * ENTITY_SCALE); // 32 x 32 tile size
     /**The state containing the state and behavior for the play state of the game.*/
     private PlayState playState;
     /**The state containing the state and behavior for the menu state of the game.*/
@@ -197,7 +197,7 @@ public class Game implements Runnable{
      * getEntityScale | Fetches the scale of entities.
      * @return Returns the scale value of entities.
      */
-    public int getEntityScale() {return ENTITY_SCALE;}
+    public float getEntityScale() {return ENTITY_SCALE;}
 
     /**
      * getTileSize | Fetches the size of tiles in the game.

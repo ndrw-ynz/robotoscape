@@ -24,13 +24,13 @@ public abstract class PlayUtils {
      * @return Returns a boolean value.
      */
     public static boolean canEntityMove(int xPos, int yPos, Entity entity, Level level, TileManager tileManager){
-        int entityScale = entity.getEntityScale();
+        float entityScale = entity.getEntityScale();
         Rectangle entityHitBox = entity.getHitBox();
 
         int entityLeftX = xPos + entity.getxHitBoxDelta();
-        int entityRightX = entityLeftX + entityHitBox.width*entityScale;
+        int entityRightX = (int) (entityLeftX + entityHitBox.width*entityScale);
         int entityTopY = yPos + entity.getyHitBoxDelta();
-        int entityBottomY = entityTopY + entityHitBox.height*entityScale;
+        int entityBottomY = (int) (entityTopY + entityHitBox.height*entityScale);
 
         int[][] levelData = level.getLevelData();
         Tile[] mapTiles = tileManager.getMapTilesMonochrome();
@@ -112,14 +112,14 @@ public abstract class PlayUtils {
      * @return Returns a boolean value.
      */
     public static boolean isEntityOnFloor(int xPos, int yPos, Entity entity, Level level, TileManager tileManager) {
-        int entityScale = entity.getEntityScale();
+        float entityScale = entity.getEntityScale();
         Rectangle entityHitBox = entity.getHitBox();
         Tile[] mapTiles = tileManager.getMapTilesMonochrome();
         int[][] levelData = level.getLevelData();
 
         int entityLeftX = xPos + entity.getxHitBoxDelta();
-        int entityRightX = entityLeftX + entityHitBox.width*entityScale;
-        int entityBottomY = yPos + entity.getyHitBoxDelta() + entityHitBox.height*entityScale;
+        int entityRightX = (int) (entityLeftX + entityHitBox.width*entityScale);
+        int entityBottomY = (int) (yPos + entity.getyHitBoxDelta() + entityHitBox.height*entityScale);
 
         boolean isBottomLeftRestricted = isRestricted(entityLeftX, entityBottomY, level, mapTiles, levelData);
         boolean isBottomRightRestricted = isRestricted(entityRightX, entityBottomY, level, mapTiles, levelData);

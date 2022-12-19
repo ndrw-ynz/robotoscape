@@ -4,7 +4,6 @@ import level.Level;
 import tile.TileManager;
 import utility.Atlas;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 
 import static utility.PlayUtils.*;
@@ -40,19 +39,19 @@ public class Player extends Entity {
     /**
      * Player is an entity controlled by the player throughout the duration
      * of the game.
-     * @param x The starting x-coordinate position of the player.
-     * @param y The starting y-coordinate position of the player.
+     * @param xPosition The starting x-coordinate position of the player.
+     * @param yPosition The starting y-coordinate position of the player.
      * @param bitWidth The width of the player sprite in pixels.
      * @param bitHeight The height of the player sprite in pixels.
      * @param entityScale The scale value scaling the appearance of the player.
      */
-    public Player(int x, int y, int bitWidth, int bitHeight, int entityScale) {
-        super(x, y-13, bitWidth, bitHeight, entityScale); // -13 on y for allowance as it spawns so it doesn't possibly clip on floor.
+    public Player(int xPosition, int yPosition, int bitWidth, int bitHeight, float entityScale) {
+        super(xPosition, yPosition-13, bitWidth, bitHeight, entityScale); // -13 on y for allowance as it spawns, so it doesn't possibly clip on floor.
         movementSpeed = 2;
         facingRight = true;
         animationCounter = 0;
         animationState = "active";
-        getPlayerImage();
+        getAnimationImages();
         updateHitBox();
         isOnAir = true;
     }
@@ -65,6 +64,7 @@ public class Player extends Entity {
     public void updatePlayer(Level level, TileManager tileManager) {
         updateHitBox();
         updateMovement(level, tileManager);
+
         updateAnimation();
     }
 
@@ -77,26 +77,26 @@ public class Player extends Entity {
 
         switch (animationState) {
             case "idle" -> {
-                xHitBoxDelta = 13*entityScale;
-                yHitBoxDelta = 6*entityScale;
+                xHitBoxDelta = (int) (13*entityScale);
+                yHitBoxDelta = (int) (6*entityScale);
                 hitBoxWidth = 11;
                 hitBoxHeight = 17;
             }
             case "wake", "active", "damaged" -> {
-                xHitBoxDelta = 13*entityScale;
-                yHitBoxDelta = entityScale;
+                xHitBoxDelta = (int) (13*entityScale);
+                yHitBoxDelta = (int) entityScale;
                 hitBoxWidth = 11;
                 hitBoxHeight = 21;
             }
             case "move", "jump" -> {
-                xHitBoxDelta = 13*entityScale;
-                yHitBoxDelta = entityScale;
+                xHitBoxDelta = (int) (13*entityScale);
+                yHitBoxDelta = (int) entityScale;
                 hitBoxWidth = 12;
                 hitBoxHeight = 21;
             }
             case "charge", "shoot" -> {
-                xHitBoxDelta = 12*entityScale;
-                yHitBoxDelta = entityScale;
+                xHitBoxDelta = (int) (12*entityScale);
+                yHitBoxDelta = (int) entityScale;
                 hitBoxWidth = 12;
                 hitBoxHeight = 22;
             }
@@ -108,6 +108,7 @@ public class Player extends Entity {
                 yHitBoxDelta = 4;
             }
             case "death" -> {
+
             }
         }
         hitBox.x = xPosition + xHitBoxDelta;
@@ -177,7 +178,8 @@ public class Player extends Entity {
      * updateAnimation | Updates the animation frames of the player
      * with its animation states.
      */
-    private void updateAnimation() {
+    @Override
+    protected void updateAnimation() {
         // TODO: Improve how player animations are handled based on state of player.
         if (isMovingLeft || isMovingRight) {
             animationState = "move";
@@ -203,34 +205,9 @@ public class Player extends Entity {
     }
 
     /**
-     * renderPlayer | Displays the player on the game screen.
-     * @param graphics The graphics object that draws images on the game screen.
-     * @param xOffset The x-value offset of the player on the game screen.
-     * @param yOffset The y-value offset of the player on the game screen.
+     * getAnimationImages | Fetches the animation states and images of the entity.
      */
-    public void renderPlayer(Graphics2D graphics, int xOffset, int yOffset) {
-        BufferedImage playerImage = animations.get(animationState)[(int) Math.floor(animationCounter)];
-        int width = bitWidth*entityScale;
-        int height = bitHeight*entityScale;
-        if (!facingRight) {
-            graphics.drawImage(playerImage, xPosition +width-xOffset,  yPosition -yOffset, -width, height, null);
-        } else {
-            graphics.drawImage(playerImage, xPosition -xOffset,  yPosition -yOffset, width, height, null);
-        }
-        graphics.setColor(Color.GREEN);
-        graphics.drawRect(hitBox.x-xOffset, hitBox.y-yOffset, hitBox.width*entityScale, hitBox.height*entityScale);
-//        renderHitBox(graphics, xOffset, yOffset);
-    }
-
-    public void renderHitBox(Graphics2D graphics) {
-        graphics.setColor(Color.GREEN);
-        graphics.drawRect(hitBox.x, hitBox.y, hitBox.width*entityScale, hitBox.height*entityScale);
-    }
-
-    /**
-     * getPlayerImage | Sets up the animation states and fetches the animation frames of the player.
-     */
-    private void getPlayerImage() {
+    protected void getAnimationImages() {
         int xImg = 4; // The x-coordinate position of the sub-image containing the sprite image.
         int yImg = 2; // The y-coordinate position of the sub-image containing the sprite image.
 

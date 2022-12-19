@@ -15,7 +15,7 @@ public class TileManager {
     /**Stores tile data used in building levels in a Tile array.*/
     private Tile[] mapTilesMonochrome;
     /**Stores a list of tiles that don't have collision properties.*/
-    public static final ArrayList<Integer> tileMonochromeNonCollisions = new ArrayList<>(Arrays.asList(0,4,5,44,45,46,141));
+    public static final ArrayList<Integer> tileMonochromeNonCollisions = new ArrayList<>(Arrays.asList(0,4,5,24,25,26,140,141,142,166));
 
     /**
      * TileManager | Initializes the tile manager of the game.
