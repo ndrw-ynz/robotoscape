@@ -98,4 +98,21 @@ public abstract class Atlas {
             throw new RuntimeException(e);
         }
     }
+
+    /**
+     * extractAnimationImages extracts the individual animation frames for a given animation image.
+     * @param source            A String containing the local file directory for the game image resource.
+     * @param subImageWidth     The width of the sub-image to be extracted from the animation image.
+     * @param subImageHeight    The height of the sub-image to be extracted from the animation image.
+     * @return Returns a BufferedImage array containing the individual animation frames for a given animation image.
+     */
+    public static BufferedImage[] extractAnimationImages(String source, int subImageWidth, int subImageHeight) {
+        BufferedImage image = getSpriteAtlas(source);
+        int numOfImages = image.getWidth() / subImageWidth;
+        BufferedImage[] animationImages = new BufferedImage[numOfImages];
+        for (int i = 0; i < numOfImages; i++) {
+            animationImages[i] = image.getSubimage(i*subImageWidth, 0, subImageWidth, subImageHeight);
+        }
+        return animationImages;
+    }
 }
