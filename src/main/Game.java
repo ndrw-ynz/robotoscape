@@ -34,8 +34,6 @@ public class Game implements Runnable{
     protected final float ENTITY_SCALE = 2.0f;
     /**The pre-determined size of tiles displayed in the game.*/
     protected final int TILE_SIZE = BIT_SIZE * TILE_SCALE; // 32 x 32 tile size
-    /**The pre-determined size of entities displayed in the game.*/
-    protected final int ENTITY_SIZE = (int) (BIT_SIZE * ENTITY_SCALE); // 32 x 32 tile size
     /**The state containing the state and behavior for the play state of the game.*/
     private PlayState playState;
     /**The state containing the state and behavior for the menu state of the game.*/
@@ -49,7 +47,7 @@ public class Game implements Runnable{
     public Game () {
         initStates();
         gamePanel = new GamePanel(this);
-        GameWindow gameWindow = new GameWindow(gamePanel);
+        new GameWindow(gamePanel);
         startGameLoop();
     }
 
