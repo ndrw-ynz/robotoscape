@@ -4,28 +4,41 @@ import utility.Atlas;
 
 import java.awt.image.BufferedImage;
 
-public class Cultist extends Enemy {
 
-    public Cultist(int xPosition, int yPosition, int bitWidth, int bitHeight, float entityScale) {
-        super(xPosition, yPosition, bitWidth, bitHeight, entityScale);
+public class Cultist extends GroundEnemy {
+
+    public Cultist(int xPosition, int yPosition, int bitWidth, int bitHeight, float attentionAreaDiameterFactor, float entityScale, int maxNumberOfHearts) {
+        super(xPosition, yPosition, bitWidth, bitHeight, attentionAreaDiameterFactor, entityScale, maxNumberOfHearts);
+        setMovementSpeed(0.4f);
         animationState = "active";
         getAnimationImages();
     }
-    @Override
-    public void updateEnemy() {
-        updateHitBox();
-        updateAnimation();
+
+    @Override public void active() {
+        setMovementSpeed(1.2f);
+    }
+
+    @Override public void passive() {
+        setMovementSpeed(0.4f);
     }
 
     @Override
     protected void updateHitBox() {
-        xHitBoxDelta = (int) (3*entityScale);
+        xHitBoxDelta = (int) (2*entityScale);
         yHitBoxDelta = (int) (entityScale);
 
-        hitBox.x = xPosition + xHitBoxDelta;
-        hitBox.y = yPosition + yHitBoxDelta;
-        hitBox.width = 10;
-        hitBox.height = 14;
+        hitBox.x = entityCoordinate.x + xHitBoxDelta;
+        hitBox.y = entityCoordinate.y + yHitBoxDelta;
+        hitBox.width = 11;
+        hitBox.height = 15;
+    }
+
+    @Override
+    protected void updateAnimation() {
+        animationCounter += isActive ? 0.06 : 0.03;
+        if (animationCounter > animations.get(animationState).length) {
+            animationCounter = 0.0;
+        }
     }
 
     @Override
@@ -33,14 +46,6 @@ public class Cultist extends Enemy {
         animations.put("active", new BufferedImage[4]);
         for (int i=0;i<4;i++) {
             animations.get("active")[i] = Atlas.getSpriteAtlas(Atlas.ENEMY_CULTIST).getSubimage(i*16, 0, 16, 16);
-        }
-    }
-
-    @Override
-    protected void updateAnimation() {
-        animationCounter += 0.04;
-        if (animationCounter > animations.get(animationState).length) {
-            animationCounter = 0.0;
         }
     }
 }

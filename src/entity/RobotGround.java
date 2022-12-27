@@ -5,19 +5,23 @@ import utility.Atlas;
 
 import java.awt.image.BufferedImage;
 
-public class RobotGround extends Enemy{
+public class RobotGround extends GroundEnemy{
 
 
-    public RobotGround(int xPosition, int yPosition, int bitWidth, int bitHeight, float entityScale) {
-        super(xPosition, yPosition, bitWidth, bitHeight, entityScale);
+    public RobotGround(int xPosition, int yPosition, int bitWidth, int bitHeight, float attentionAreaDiameterFactor, float entityScale, int maxNumberOfHearts) {
+        super(xPosition, yPosition, bitWidth, bitHeight, attentionAreaDiameterFactor, entityScale, maxNumberOfHearts);
         animationState = "active";
         getAnimationImages();
     }
 
-    @Override
-    public void updateEnemy() {
-        updateHitBox();
-        updateAnimation();
+    @Override public void active() {
+        setMovementSpeed(0.8f);
+        animationState = "active";
+    }
+
+    @Override public void passive() {
+        setMovementSpeed(0.0f);
+        animationState = "passive";
     }
 
     @Override
@@ -25,10 +29,18 @@ public class RobotGround extends Enemy{
         xHitBoxDelta = (int) (2*entityScale);
         yHitBoxDelta = (int) (4*entityScale);
 
-        hitBox.x = xPosition + xHitBoxDelta;
-        hitBox.y = yPosition + yHitBoxDelta;
+        hitBox.x = entityCoordinate.x + xHitBoxDelta;
+        hitBox.y = entityCoordinate.y + yHitBoxDelta;
         hitBox.width = 11;
-        hitBox.height = 11;
+        hitBox.height = 12;
+    }
+
+    @Override
+    protected void updateAnimation() {
+        animationCounter += isActive ? 0.08f : 0.04f;
+        if (animationCounter > animations.get(animationState).length) {
+            animationCounter = 0.0;
+        }
     }
 
     @Override
@@ -41,14 +53,6 @@ public class RobotGround extends Enemy{
         animations.put("passive", new BufferedImage[6]);
         for (int i=0; i<6; i++) {
             animations.get("passive")[i] = Atlas.getSpriteAtlas(Atlas.ENEMY_ROBOT_GROUND_PASSIVE).getSubimage(i*16, 0, 16, 16);
-        }
-    }
-
-    @Override
-    protected void updateAnimation() {
-        animationCounter += 0.04;
-        if (animationCounter > animations.get(animationState).length) {
-            animationCounter = 0.0;
         }
     }
 }

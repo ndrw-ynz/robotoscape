@@ -8,34 +8,42 @@ import java.awt.image.BufferedImage;
  * The Abomination class is an entity class that contains
  * the state and behavior of the abomination enemy entity in the game.
  */
-public class Abomination extends Enemy{
+public class Abomination extends GroundEnemy{
 
-    public Abomination(int x, int y, int bitWidth, int bitHeight, float entityScale) {
-        super(x, y, bitWidth, bitHeight, entityScale);
+    public Abomination(int x, int y, int bitWidth, int bitHeight, float attentionAreaDiameterFactor, float entityScale, int maxNumberOfHearts) {
+        super(x, y, bitWidth, bitHeight, attentionAreaDiameterFactor, entityScale, maxNumberOfHearts);
+        setMovementSpeed(0.8f);
         animationState = "passive";
         getAnimationImages();
     }
 
     @Override
-    public void updateEnemy() {
-        updateHitBox();
-        updateAnimation();
+    public void active() {
+        setMovementSpeed(1.3f);
+        animationState = "active";
     }
 
     @Override
+    public void passive() {
+        setMovementSpeed(0.8f);
+        animationState = "passive";
+    }
+
+
+    @Override
     protected void updateHitBox() {
-        xHitBoxDelta = (int) (5*entityScale);
+        xHitBoxDelta = (int) (4*entityScale);
         yHitBoxDelta = (int) (entityScale);
 
-        hitBox.x = xPosition + xHitBoxDelta;
-        hitBox.y = yPosition + yHitBoxDelta;
-        hitBox.width = 6;
-        hitBox.height = 14;
+        hitBox.x = entityCoordinate.x + xHitBoxDelta;
+        hitBox.y = entityCoordinate.y + yHitBoxDelta;
+        hitBox.width = 8;
+        hitBox.height = 15;
     }
 
     @Override
     protected void updateAnimation(){
-        animationCounter += 0.04;
+        animationCounter += isActive ? 0.08 : 0.04;
         if (animationCounter > animations.get(animationState).length) {
             animationCounter = 0.0;
         }
