@@ -69,7 +69,7 @@ public class PlayState extends State implements StateMethods {
         levelManager = new LevelManager(game);
         tileManager = new TileManager();
         enemyManager = new EnemyManager(levelManager.getCurrentLevel());
-        player = new Player(levelManager.getCurrentLevel().getPlayerXPosition(), levelManager.getCurrentLevel().getPlayerYPosition(), 36, 23, game.getEntityScale());
+        player = new Player(levelManager.getCurrentLevel().getPlayerXPosition(), levelManager.getCurrentLevel().getPlayerYPosition(), 36, 23, game.getEntityScale(), 4);
 
         int levelWidthTiles = levelManager.getCurrentLevel().getLevelWidthTiles();
         int levelHeightTiles =  levelManager.getCurrentLevel().getLevelHeightTiles();
@@ -129,10 +129,10 @@ public class PlayState extends State implements StateMethods {
             }
         }
         if (!isLoading) {
-            player.updatePlayer(levelManager.getCurrentLevel(), tileManager);
+            player.updateEntity(levelManager.getCurrentLevel(), tileManager);
         }
         levelManager.updateLevel();
-        enemyManager.updateEnemies();
+        enemyManager.updateEnemies(levelManager.getCurrentLevel(), tileManager, player);
     }
 
     /**
@@ -165,8 +165,8 @@ public class PlayState extends State implements StateMethods {
         /*
 
         */
-        int playerXPos = player.getxPosition() + player.getxHitBoxDelta();
-        int xDiff = playerXPos - xOffset;
+        float playerXPos = player.getEntityCoordinate().x + player.getxHitBoxDelta();
+        float xDiff = playerXPos - xOffset;
 
         /*
         If the player exceeds the leftBorder and rightBorder even with xOffset,
@@ -177,8 +177,8 @@ public class PlayState extends State implements StateMethods {
         } else if (xDiff > rightBorder) {
             xOffset += xDiff - rightBorder;
         }
-        int playerYPos = player.getyPosition()+ player.getyHitBoxDelta();
-        int yDiff = playerYPos - yOffset;
+        float playerYPos = player.getEntityCoordinate().y+ player.getyHitBoxDelta();
+        float yDiff = playerYPos - yOffset;
 
         /*
         If the player exceeds the upBorder and downBorder even with yOffset,
