@@ -13,8 +13,6 @@ import static utility.PlayUtils.*;
  * by the player throughout the game.
  */
 public class Player extends Entity {
-    /** isMoving indicates if the player is in a moving state.*/
-    private boolean isMoving;
     /** isMovingLeft indicates if the player is moving left.*/
     private boolean isMovingLeft;
     /** isMovingRight indicates if the player is moving right.*/
@@ -28,13 +26,13 @@ public class Player extends Entity {
     /** isOnAir indicates if the player is on air.*/
     private boolean isOnAir;
     /** JUMP_SPEED contains the players jump height limit.*/
-    private final float JUMP_SPEED = -1.8f*entityScale;
+    private final float JUMP_SPEED = -2.4f*entityScale;
     /** GRAVITY contains the gravity of the player.*/
-    private final float GRAVITY = 0.04f*entityScale;
+    private final float GRAVITY = 0.06f*entityScale;
     /** airSpeed contains the speed  of the player on air.*/
     private float airSpeed = 0.0f;
     /** FALL_SPEED_AFTER_COLLISION contains the speed of the player after collision on air.*/
-    private final float FALL_SPEED_AFTER_COLLISION = 0.2f * entityScale;
+    private final float FALL_SPEED_AFTER_COLLISION = 0.3f * entityScale;
 
     /**
      * Player is an entity controlled by the player throughout the duration
@@ -45,9 +43,9 @@ public class Player extends Entity {
      * @param bitHeight The height of the player sprite in pixels.
      * @param entityScale The scale value scaling the appearance of the player.
      */
-    public Player(int xPosition, int yPosition, int bitWidth, int bitHeight, float entityScale) {
-        super(xPosition, yPosition-13, bitWidth, bitHeight, entityScale); // -13 on y for allowance as it spawns, so it doesn't possibly clip on floor.
-        movementSpeed = 2;
+    public Player(int xPosition, int yPosition, int bitWidth, int bitHeight, float entityScale, int maxNumberOfHearts) {
+        super(xPosition, yPosition-13, bitWidth, bitHeight, entityScale, maxNumberOfHearts); // -13 on y for allowance as it spawns, so it doesn't possibly clip on floor.
+        movementSpeed = 2f;
         facingRight = true;
         animationCounter = 0;
         animationState = "active";
@@ -57,20 +55,9 @@ public class Player extends Entity {
     }
 
     /**
-     * updatePlayer | Updates the current state of the player.
-     * @param level The current level of the game.
-     * @param tileManager The TileManager containing data about the tiles of the game/level.
-     */
-    public void updatePlayer(Level level, TileManager tileManager) {
-        updateHitBox();
-        updateMovement(level, tileManager);
-
-        updateAnimation();
-    }
-
-    /**
      * updateHitBox | Updates the hit box of the player.
      */
+    @Override
     protected void updateHitBox() {
         int hitBoxWidth = 0; // Stores the width of the player's hit box according to the current animation state.
         int hitBoxHeight = 0 ; // Stores the height of the player's hit box according to the current animation state.
@@ -111,8 +98,8 @@ public class Player extends Entity {
 
             }
         }
-        hitBox.x = xPosition + xHitBoxDelta;
-        hitBox.y = yPosition + yHitBoxDelta;
+        hitBox.x = (int) (entityCoordinate.x + xHitBoxDelta);
+        hitBox.y = (int) (entityCoordinate.y + yHitBoxDelta);
         hitBox.width = hitBoxWidth;
         hitBox.height = hitBoxHeight;
    }
@@ -122,9 +109,10 @@ public class Player extends Entity {
      * @param level The current level of the game.
      * @param tileManager The TileManager containing data about the tiles of the game/level.
      */
-    private void updateMovement(Level level, TileManager tileManager) {
+    @Override
+    protected void updateMovement(Level level, TileManager tileManager) {
         if (isMovingLeft || isMovingRight || isJumping || isOnAir) {
-            int xSpeed = 0;
+            float xSpeed = 0;
             float ySpeed = 0;
 
             if (isMovingLeft) {
@@ -142,18 +130,18 @@ public class Player extends Entity {
                 }
             }
             if (!isOnAir) {
-                isOnAir = !isEntityOnFloor(xPosition, yPosition, this, level, tileManager);
+                isOnAir = !isEntityOnFloor(entityCoordinate.x, entityCoordinate.y, this, level, tileManager);
             }
 
             // if cant move, there must be extra space between border and hitBox. calculate that space and set as xSpeed.
             if (isOnAir) {
                 // ON AIR. X AND Y AFFECTED.
-                if (canEntityMove(xPosition, (int) (yPosition +airSpeed), this, level, tileManager)) {
+                if (canEntityMove(entityCoordinate.x, entityCoordinate.y +airSpeed, this, level, tileManager)) {
                     // focus on up and down speed
                     ySpeed = airSpeed;
                     airSpeed += GRAVITY;
                 } else {
-                    ySpeed = getEntityYOffset(yPosition + yHitBoxDelta, airSpeed);
+                    ySpeed = getEntityYOffset(entityCoordinate.y + yHitBoxDelta, airSpeed);
                     if (airSpeed > 0) {
                         isOnAir = false;
                         airSpeed = 0;
@@ -163,13 +151,13 @@ public class Player extends Entity {
                 }
             }
 
-            if (!canEntityMove(xPosition +xSpeed, yPosition, this, level, tileManager)) {
-                xSpeed = getEntityXOffset(xPosition + xHitBoxDelta, isMovingLeft);
+            if (!canEntityMove(entityCoordinate.x +xSpeed, entityCoordinate.y, this, level, tileManager)) {
+                xSpeed = getEntityXOffset(entityCoordinate.x + xHitBoxDelta, isMovingLeft);
             }
 
-            if (canEntityMove(xPosition + xSpeed, (int) (yPosition + ySpeed), this, level, tileManager)) {
-                xPosition += xSpeed;
-                yPosition += ySpeed;
+            if (canEntityMove(entityCoordinate.x + xSpeed, entityCoordinate.y + ySpeed, this, level, tileManager)) {
+                entityCoordinate.x += xSpeed;
+                entityCoordinate.y += ySpeed;
             }
         }
     }
