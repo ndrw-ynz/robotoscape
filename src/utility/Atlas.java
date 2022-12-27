@@ -59,9 +59,13 @@ public abstract class Atlas {
     // TILE SETS USED IN LEVEL-BUILDING.
     /**The file path for the monochrome tile sets used in building the levels of the game.*/
     public static final String LEVEL_MONOCHROME_TILESET = "tiles/monochrome_tilemap_transparent_packed.png";
-    /**The file path for Silver font used in the game.*/
+
+    // HEARTS ASSETS USED IN THE GAME.
+    /**The file path for the heart animations used in the game.*/
+    public static final String HEART_ANIMATIONS = "hearts/hearts.png";
 
     // FONTS USED IN THE GAME.
+    /**The file path for Silver font used in the game.*/
     public static final String SILVER_FONT = "fonts/Silver.ttf";
     /**The file path for Robus font used in the game.*/
     public static final String ROBUS_FONT = "fonts/Robus.ttf";
