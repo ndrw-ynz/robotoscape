@@ -2,11 +2,22 @@ package entity;
 
 import utility.Atlas;
 
-import java.awt.image.BufferedImage;
-
+/**
+ * The Drone class is an air-based enemy entity class that contains
+ * the state and behavior of the Drone enemy entity in the game.
+ */
 public class Drone extends AirEnemy{
 
-
+    /**
+     * Drone is an air-based enemy entity spawned throughout the game.
+     * @param xPosition                     The starting x-coordinate position of the Drone entity.
+     * @param yPosition                     The starting y-coordinate position of the Drone entity
+     * @param bitWidth                      The width of the Drone entity in pixels.
+     * @param bitHeight                     The height of the Drone entity in pixels.
+     * @param attentionAreaDiameterFactor   The diameter of the attention area of the Drone entity.
+     * @param entityScale                   The scale value scaling the appearance of the Drone entity.
+     * @param maxNumberOfHearts             The maximum number of hearts of the Drone entity.
+     */
     public Drone(int xPosition, int yPosition, int bitWidth, int bitHeight, float attentionAreaDiameterFactor, float entityScale, int maxNumberOfHearts) {
         super(xPosition, yPosition, bitWidth, bitHeight, attentionAreaDiameterFactor, entityScale, maxNumberOfHearts);
         setMovementSpeed(0.004f);
@@ -35,9 +46,6 @@ public class Drone extends AirEnemy{
 
     @Override
     protected void getAnimationImages() {
-        animations.put("active", new BufferedImage[4]);
-        for (int i=0; i<4; i++) {
-            animations.get("active")[i] = Atlas.getSpriteAtlas(Atlas.ENEMY_DRONE).getSubimage(i*16, 0, 16, 16);
-        }
+        animations.put("active", Atlas.extractAnimationImages(Atlas.ENEMY_DRONE, 16, 16));
     }
 }

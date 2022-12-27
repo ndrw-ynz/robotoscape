@@ -2,16 +2,24 @@ package entity;
 
 import utility.Atlas;
 
-import java.awt.image.BufferedImage;
-
 /**
- * The Abomination class is an entity class that contains
- * the state and behavior of the abomination enemy entity in the game.
+ * The Abomination class is a ground-based enemy entity class that contains
+ * the state and behavior of the Abomination enemy entity in the game.
  */
 public class Abomination extends GroundEnemy{
 
-    public Abomination(int x, int y, int bitWidth, int bitHeight, float attentionAreaDiameterFactor, float entityScale, int maxNumberOfHearts) {
-        super(x, y, bitWidth, bitHeight, attentionAreaDiameterFactor, entityScale, maxNumberOfHearts);
+    /**
+     * Abomination is a ground-based enemy entity spawned throughout the game.
+     * @param xPosition                     The starting x-coordinate position of the Abomination entity.
+     * @param yPosition                     The starting y-coordinate position of the Abomination entity
+     * @param bitWidth                      The width of the Abomination entity in pixels.
+     * @param bitHeight                     The height of the Abomination entity in pixels.
+     * @param attentionAreaDiameterFactor   The diameter of the attention area of the Abomination entity.
+     * @param entityScale                   The scale value scaling the appearance of the Abomination entity.
+     * @param maxNumberOfHearts             The maximum number of hearts of the Abomination entity.
+     */
+    public Abomination(int xPosition, int yPosition, int bitWidth, int bitHeight, float attentionAreaDiameterFactor, float entityScale, int maxNumberOfHearts) {
+        super(xPosition, yPosition, bitWidth, bitHeight, attentionAreaDiameterFactor, entityScale, maxNumberOfHearts);
         setMovementSpeed(0.8f);
         animationState = "passive";
         getAnimationImages();
@@ -51,14 +59,7 @@ public class Abomination extends GroundEnemy{
 
     @Override
     protected void getAnimationImages() {
-        animations.put("active", new BufferedImage[5]);
-        for (int i=0; i<5; i++) {
-            animations.get("active")[i] = Atlas.getSpriteAtlas(Atlas.ENEMY_ABOMINATION_ACTIVE).getSubimage(i*16, 0, 16, 16);
-        }
-
-        animations.put("passive", new BufferedImage[5]);
-        for (int i=0;i<5; i++) {
-            animations.get("passive")[i] = Atlas.getSpriteAtlas(Atlas.ENEMY_ABOMINATION_PASSIVE).getSubimage(i*16, 0, 16, 16);
-        }
+        animations.put("active", Atlas.extractAnimationImages(Atlas.ENEMY_ABOMINATION_ACTIVE, 16, 16));
+        animations.put("passive", Atlas.extractAnimationImages(Atlas.ENEMY_ABOMINATION_PASSIVE, 16, 16));
     }
 }

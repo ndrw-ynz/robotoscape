@@ -2,11 +2,23 @@ package entity;
 
 import utility.Atlas;
 
-import java.awt.image.BufferedImage;
 
-
+/**
+ * The Cultist class is a ground-based enemy entity class that contains
+ * the state and behavior of the Cultist enemy entity in the game.
+ */
 public class Cultist extends GroundEnemy {
 
+    /**
+     * Cultist is a ground-based enemy entity spawned throughout the game.
+     * @param xPosition                     The starting x-coordinate position of the Cultist entity.
+     * @param yPosition                     The starting y-coordinate position of the Cultist entity
+     * @param bitWidth                      The width of the Cultist entity in pixels.
+     * @param bitHeight                     The height of the Cultist entity in pixels.
+     * @param attentionAreaDiameterFactor   The diameter of the attention area of the Cultist entity.
+     * @param entityScale                   The scale value scaling the appearance of the Cultist entity.
+     * @param maxNumberOfHearts             The maximum number of hearts of the Cultist entity.
+     */
     public Cultist(int xPosition, int yPosition, int bitWidth, int bitHeight, float attentionAreaDiameterFactor, float entityScale, int maxNumberOfHearts) {
         super(xPosition, yPosition, bitWidth, bitHeight, attentionAreaDiameterFactor, entityScale, maxNumberOfHearts);
         setMovementSpeed(0.4f);
@@ -43,9 +55,6 @@ public class Cultist extends GroundEnemy {
 
     @Override
     protected void getAnimationImages() {
-        animations.put("active", new BufferedImage[4]);
-        for (int i=0;i<4;i++) {
-            animations.get("active")[i] = Atlas.getSpriteAtlas(Atlas.ENEMY_CULTIST).getSubimage(i*16, 0, 16, 16);
-        }
+        animations.put("active",  Atlas.extractAnimationImages(Atlas.ENEMY_CULTIST, 16, 16));
     }
 }

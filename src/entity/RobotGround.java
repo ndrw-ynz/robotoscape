@@ -2,12 +2,22 @@ package entity;
 
 import utility.Atlas;
 
-
-import java.awt.image.BufferedImage;
-
+/**
+ * The RobotGround class is a ground-based enemy entity class that contains
+ * the state and behavior of the Cultist enemy entity in the game.
+ */
 public class RobotGround extends GroundEnemy{
 
-
+    /**
+     * RobotGround is a ground-based enemy entity spawned throughout the game.
+     * @param xPosition                     The starting x-coordinate position of the RobotGround entity.
+     * @param yPosition                     The starting y-coordinate position of the RobotGround entity
+     * @param bitWidth                      The width of the RobotGround entity in pixels.
+     * @param bitHeight                     The height of the RobotGround entity in pixels.
+     * @param attentionAreaDiameterFactor   The diameter of the attention area of the RobotGround entity.
+     * @param entityScale                   The scale value scaling the appearance of the RobotGround entity.
+     * @param maxNumberOfHearts             The maximum number of hearts of the RobotGround entity.
+     */
     public RobotGround(int xPosition, int yPosition, int bitWidth, int bitHeight, float attentionAreaDiameterFactor, float entityScale, int maxNumberOfHearts) {
         super(xPosition, yPosition, bitWidth, bitHeight, attentionAreaDiameterFactor, entityScale, maxNumberOfHearts);
         animationState = "active";
@@ -45,14 +55,7 @@ public class RobotGround extends GroundEnemy{
 
     @Override
     protected void getAnimationImages() {
-        animations.put("active", new BufferedImage[6]);
-        for (int i=0; i<6; i++) {
-            animations.get("active")[i] = Atlas.getSpriteAtlas(Atlas.ENEMY_ROBOT_GROUND_ACTIVE).getSubimage(i*16, 0, 16, 16);
-        }
-
-        animations.put("passive", new BufferedImage[6]);
-        for (int i=0; i<6; i++) {
-            animations.get("passive")[i] = Atlas.getSpriteAtlas(Atlas.ENEMY_ROBOT_GROUND_PASSIVE).getSubimage(i*16, 0, 16, 16);
-        }
+        animations.put("active", Atlas.extractAnimationImages(Atlas.ENEMY_ROBOT_GROUND_ACTIVE, 16, 16));
+        animations.put("passive", Atlas.extractAnimationImages(Atlas.ENEMY_ROBOT_GROUND_PASSIVE, 16, 16));
     }
 }

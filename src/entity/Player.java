@@ -37,11 +37,12 @@ public class Player extends Entity {
     /**
      * Player is an entity controlled by the player throughout the duration
      * of the game.
-     * @param xPosition The starting x-coordinate position of the player.
-     * @param yPosition The starting y-coordinate position of the player.
-     * @param bitWidth The width of the player sprite in pixels.
-     * @param bitHeight The height of the player sprite in pixels.
-     * @param entityScale The scale value scaling the appearance of the player.
+     * @param xPosition         The starting x-coordinate position of the player.
+     * @param yPosition         The starting y-coordinate position of the player.
+     * @param bitWidth          The width of the player sprite in pixels.
+     * @param bitHeight         The height of the player sprite in pixels.
+     * @param entityScale       The scale value scaling the appearance of the player.
+     * @param maxNumberOfHearts The maximum number of hearts of the player.
      */
     public Player(int xPosition, int yPosition, int bitWidth, int bitHeight, float entityScale, int maxNumberOfHearts) {
         super(xPosition, yPosition-13, bitWidth, bitHeight, entityScale, maxNumberOfHearts); // -13 on y for allowance as it spawns, so it doesn't possibly clip on floor.
