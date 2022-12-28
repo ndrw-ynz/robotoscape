@@ -2,6 +2,7 @@ package utility;
 
 import entity.*;
 import level.Level;
+import projectiles.Projectile;
 import tile.Tile;
 import tile.TileManager;
 
@@ -54,8 +55,8 @@ public abstract class PlayUtils {
      * @param levelData A 2D array containing the data of the level's tiles value.
      * @return Returns a boolean value.
      */
-    private static boolean isRestricted(float x, float y, Level level, Tile[] mapTiles, int[][] levelData) {
-        if (x < 0 || x >= level.getLevelWidthTiles() *32 || y < 0 || y >= level.getLevelHeightTiles() * 32) {
+    public static boolean isRestricted(float x, float y, Level level, Tile[] mapTiles, int[][] levelData) {
+        if (x < 0 || x >= level.getLevelWidthTiles() * 32 || y < 0 || y >= level.getLevelHeightTiles() * 32) {
             return true;
         }
         int xIndex = (int) x / 32;
@@ -165,5 +166,31 @@ public abstract class PlayUtils {
         float centerX = (entityHitBox.x+(entityHitBox.width*entity.getEntityScale())/2);
         float centerY = (entityHitBox.y+(entityHitBox.height*entity.getEntityScale())/2);
         return new Point.Float(centerX, centerY);
+    }
+
+    /**
+     * isProjectileOnCollision checks if a projectile is on a collision tile on the current level of the game.
+     * @param projectile    A projectile object.
+     * @param level         The current level of the game.
+     * @param tileManager   The tile manager managing all the tiles used in the game.
+     * @return Returns a boolean value determining whether the projectile is on a collision tile or not.
+     */
+    public static boolean isProjectileOnCollision(Projectile projectile, Level level, TileManager tileManager) {
+        Rectangle2D.Float projectileHitBox = projectile.getHitBox();
+
+        float projectileLeftX = projectileHitBox.x;
+        float projectileRightX = projectileLeftX + projectileHitBox.width;
+        float projectileTopY = projectileHitBox.y;
+        float projectileBottomY = projectileTopY + projectileHitBox.height;
+
+        int[][] levelData = level.getLevelData();
+        Tile[] mapTiles = tileManager.getMapTilesMonochrome();
+
+        boolean isTopLeftRestricted = isRestricted(projectileLeftX, projectileTopY, level, mapTiles, levelData);
+        boolean isTopRightRestricted = isRestricted(projectileRightX, projectileTopY, level, mapTiles, levelData);
+        boolean isBottomLeftRestricted = isRestricted(projectileLeftX, projectileBottomY, level, mapTiles, levelData);
+        boolean isBottomRightRestricted = isRestricted(projectileRightX, projectileBottomY, level, mapTiles, levelData);
+
+        return isTopLeftRestricted && isTopRightRestricted && isBottomLeftRestricted && isBottomRightRestricted;
     }
 }
