@@ -8,12 +8,14 @@ import loading.Loading;
 import loading.LoadingPhase;
 import main.Game;
 import main.GamePanel;
+import projectiles.ProjectileManager;
 import tile.TileManager;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Point2D;
 
 /**
  * The PlayState class extends the State class and implements
@@ -34,7 +36,8 @@ public class PlayState extends State implements StateMethods {
     private final TileManager tileManager;
     /**Manages the enemies in the current level of the game.*/
     private final EnemyManager enemyManager;
-
+    /**Manages the projectiles in the current level of the game.*/
+    private final ProjectileManager projectileManager;
     /**Manages the loading screen of the game as introduced before the level starts.*/
     private Loading loading;
     /**The state of the play state, whether it's displaying loading or not.*/
@@ -69,6 +72,8 @@ public class PlayState extends State implements StateMethods {
         levelManager = new LevelManager(game);
         tileManager = new TileManager();
         enemyManager = new EnemyManager(levelManager.getCurrentLevel());
+        projectileManager = new ProjectileManager(levelManager.getCurrentLevel(), tileManager, enemyManager);
+
         player = new Player(levelManager.getCurrentLevel().getPlayerXPosition(), levelManager.getCurrentLevel().getPlayerYPosition(), 36, 23, game.getEntityScale(), 4);
 
         int levelWidthTiles = levelManager.getCurrentLevel().getLevelWidthTiles();
@@ -98,6 +103,7 @@ public class PlayState extends State implements StateMethods {
         }
         levelManager.renderLevel(graphics, xOffset, yOffset);
         enemyManager.renderEnemies((Graphics2D) graphics, xOffset, yOffset);
+        projectileManager.renderPlayerProjectiles((Graphics2D) graphics, xOffset, yOffset);
     }
 
     @Override
@@ -133,6 +139,7 @@ public class PlayState extends State implements StateMethods {
         }
         levelManager.updateLevel();
         enemyManager.updateEnemies(levelManager.getCurrentLevel(), tileManager, player);
+        projectileManager.updatePlayerProjectiles();
     }
 
     /**
@@ -217,7 +224,7 @@ public class PlayState extends State implements StateMethods {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if (SwingUtilities.isLeftMouseButton(e)) {
+        if (SwingUtilities.isLeftMouseButton(e) && !player.getIsGunOnCoolDown()) {
             player.setIsCharging(true);
         }
 
@@ -225,9 +232,15 @@ public class PlayState extends State implements StateMethods {
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        if (SwingUtilities.isLeftMouseButton(e)) {
+        if (SwingUtilities.isLeftMouseButton(e) && !player.getIsGunOnCoolDown() && player.getIsCharging()) {
+            Point2D.Float startCoordinate = player.getGunPointCoordinate();
+            Point2D.Float endCoordinate = new Point2D.Float(e.getX(), e.getY());
+            // Creates a projectile.
+            projectileManager.createPlayerProjectile(startCoordinate, endCoordinate, xOffset, yOffset);
+            // Sets state of the player.
             player.setIsCharging(false);
             player.setIsShooting(true);
+            player.setIsGunOnCoolDown(true);
         }
     }
 
