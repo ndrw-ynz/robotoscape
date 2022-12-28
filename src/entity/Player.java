@@ -4,6 +4,7 @@ import level.Level;
 import tile.TileManager;
 import utility.Atlas;
 
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 
 import static utility.PlayUtils.*;
@@ -13,6 +14,7 @@ import static utility.PlayUtils.*;
  * by the player throughout the game.
  */
 public class Player extends Entity {
+
     /** isMovingLeft indicates if the player is moving left.*/
     private boolean isMovingLeft;
     /** isMovingRight indicates if the player is moving right.*/
@@ -25,6 +27,12 @@ public class Player extends Entity {
     private boolean isShooting;
     /** isOnAir indicates if the player is on air.*/
     private boolean isOnAir;
+    /** gunOnCoolDown determines if the player can or cannot shoot a projectile.*/
+    private boolean isGunOnCoolDown;
+    /** gunPointCoordinate contains the x,y-coordinate of the point of the player's gun.*/
+    private final Point2D.Float gunPointCoordinate;
+    /** gunShootCounter is used as a counter for implementing breaks between the shots of the player. */
+    private double gunShootCounter;
     /** JUMP_SPEED contains the players jump height limit.*/
     private final float JUMP_SPEED = -2.4f*entityScale;
     /** GRAVITY contains the gravity of the player.*/
@@ -53,6 +61,13 @@ public class Player extends Entity {
         getAnimationImages();
         updateHitBox();
         isOnAir = true;
+        gunPointCoordinate = new Point2D.Float(xPosition + 27, yPosition + 8);
+    }
+
+    @Override
+    public void updateEntity(Level level, TileManager tileManager) {
+        super.updateEntity(level, tileManager);
+        updateGunState();
     }
 
     /**
@@ -112,6 +127,7 @@ public class Player extends Entity {
      */
     @Override
     protected void updateMovement(Level level, TileManager tileManager) {
+        if (isCharging && !isOnAir) return;
         if (isMovingLeft || isMovingRight || isJumping || isOnAir) {
             float xSpeed = 0;
             float ySpeed = 0;
@@ -182,14 +198,34 @@ public class Player extends Entity {
             animationState = "active";
         }
 
-//        if ((isMovingLeft || isMovingRight) && isCharging) {
-//            animationState = "charge";
-//        }
+        if ((isMovingLeft || isMovingRight) && isCharging) {
+            animationState = "charge";
+        }
 
         animationCounter += 0.05;
         if (animationCounter > animations.get(animationState).length) {
             animationCounter = 0.0;
             isShooting = false;
+        }
+    }
+
+    /**
+     * updateGunState updates state of the player's gun.
+     */
+    private void updateGunState() {
+        if (isGunOnCoolDown) {
+            gunShootCounter += 0.01;
+        }
+        if (isMovingRight) {
+            gunPointCoordinate.x = entityCoordinate.x + 27;
+        } else {
+            gunPointCoordinate.x = entityCoordinate.x - 10;
+        }
+        gunPointCoordinate.y = entityCoordinate.y + 8;
+
+        if (gunShootCounter > 2) {
+            gunShootCounter = 0;
+            isGunOnCoolDown = false;
         }
     }
 
@@ -258,6 +294,26 @@ public class Player extends Entity {
     }
 
     /**
+     * getIsCharging fetches the isCharging state of the player.
+     * @return Returns a boolean value determining the player's isCharging state.
+     */
+    public boolean getIsCharging() {return isCharging;}
+
+    /**
+     * getIsGunOnCoolDown fetches the isGunOnCoolDown state of the player.
+     * @return Returns a boolean value determining the player's isGunOnCoolDown state.
+     */
+    public boolean getIsGunOnCoolDown() {
+        return isGunOnCoolDown;
+    }
+
+    /**
+     * getGunPointCoordinate fetches the x,y-coordinate of the player's gun point.
+     * @return Returns a Point2D.Float containing the x,y-coordinate of the player's gun point.
+     */
+    public Point2D.Float getGunPointCoordinate() {return gunPointCoordinate;}
+
+    /**
      * setIsJumping | Sets the boolean value of the player's isJumping state.
      * @param isJumping A boolean value determining if the player is jumping.
      */
@@ -292,4 +348,12 @@ public class Player extends Entity {
      * @param isShooting A boolean value determining if the player is in a shooting state.
      */
     public void setIsShooting(boolean isShooting) {this.isShooting = isShooting;}
+
+    /**
+     * setIsGunOnCoolDown sets the boolean value of the player's isGunOnCoolDown state.
+     * @param isGunOnCoolDown A boolean value determining if the player's gun is on cooldown.
+     */
+    public void setIsGunOnCoolDown(boolean isGunOnCoolDown) {
+        this.isGunOnCoolDown = isGunOnCoolDown;
+    }
 }
