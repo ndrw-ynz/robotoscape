@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * The EnemyManager class manages all the enemies
+ * The EnemyManager is a class that manages all the enemies
  * found on each level of the game.
  */
 public class EnemyManager {
@@ -71,5 +71,13 @@ public class EnemyManager {
         for (Enemy enemy: enemyArrayList) {
             enemy.updateEnemy(level, tileManager, player);
         }
+    }
+
+    /**
+     * getEnemyList fetches the enemyArrayList of an enemyManager instance.
+     * @return Returns an ArrayList<Enemy> containing all the enemies present in the game.
+     */
+    public ArrayList<Enemy> getEnemyList() {
+        return enemyArrayList;
     }
 }
