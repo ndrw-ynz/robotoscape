@@ -64,6 +64,12 @@ public abstract class Atlas {
     /**The file path for the heart animations used in the game.*/
     public static final String HEART_ANIMATIONS = "hearts/hearts.png";
 
+    // PROJECTILE ASSETS USED IN THE GAME.
+    /**The file path for the fire projectile animation used in the game.*/
+    public static final String FIRE_PROJECTILE = "projectile/fire_projectile.png";
+    /**The file path for the fire explosion animation used in the game.*/
+    public static final String FIRE_EXPLOSION = "projectile/fire_explosion.png";
+
     // FONTS USED IN THE GAME.
     /**The file path for Silver font used in the game.*/
     public static final String SILVER_FONT = "fonts/Silver.ttf";
