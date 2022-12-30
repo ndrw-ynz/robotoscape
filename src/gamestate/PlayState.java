@@ -43,7 +43,7 @@ public class PlayState extends State implements StateMethods {
     /**The state of the play state, whether it's displaying loading or not.*/
     private boolean isLoading;
     /**The offset of the player as it reaches the border on the x-axis of the game screen.*/
-    private int xOffset;
+    private double xOffset;
     /**The maximum value of offset of the player in the x-axis of the game screen.*/
     private final int maxXOffset;
     /**The x-coordinate for the left border of the player on the game screen.*/
@@ -51,7 +51,7 @@ public class PlayState extends State implements StateMethods {
     /**The x-coordinate for the right border of the player on the game screen.*/
     private final int rightBorder;
     /** The offset of the player as it reaches the border on the y-axis of the game screen.*/
-    private int yOffset;
+    private double yOffset;
     /**The maximum value of offset of the player in the y-axis of the game screen.*/
     private final int maxYOffset;
     /**The y-coordinate for the upper border of the player on the game screen.*/
@@ -74,7 +74,7 @@ public class PlayState extends State implements StateMethods {
         enemyManager = new EnemyManager(levelManager.getCurrentLevel());
         projectileManager = new ProjectileManager(levelManager.getCurrentLevel(), tileManager, enemyManager);
 
-        player = new Player(levelManager.getCurrentLevel().getPlayerXPosition(), levelManager.getCurrentLevel().getPlayerYPosition(), 36, 23, game.getEntityScale(), 4);
+        player = new Player(levelManager.getCurrentLevel().getPlayerXPosition(), levelManager.getCurrentLevel().getPlayerYPosition(), 36, 23, game.getEntityScale(), 1,4);
 
         int levelWidthTiles = levelManager.getCurrentLevel().getLevelWidthTiles();
         int levelHeightTiles =  levelManager.getCurrentLevel().getLevelHeightTiles();
@@ -157,7 +157,6 @@ public class PlayState extends State implements StateMethods {
      * of the level and the position of the player from the level.
      */
     private void updateOffsetFromLoading(double xOffsetSpeed, double yOffsetSpeed) {
-        System.out.println("xOffsetSpeed : " + xOffsetSpeed + " yOffsetSpeed : " + yOffsetSpeed);
         xOffset += xOffsetSpeed;
         yOffset += yOffsetSpeed;
     }
@@ -173,7 +172,7 @@ public class PlayState extends State implements StateMethods {
 
         */
         float playerXPos = player.getEntityCoordinate().x + player.getxHitBoxDelta();
-        float xDiff = playerXPos - xOffset;
+        double xDiff = playerXPos - xOffset;
 
         /*
         If the player exceeds the leftBorder and rightBorder even with xOffset,
@@ -185,7 +184,7 @@ public class PlayState extends State implements StateMethods {
             xOffset += xDiff - rightBorder;
         }
         float playerYPos = player.getEntityCoordinate().y+ player.getyHitBoxDelta();
-        float yDiff = playerYPos - yOffset;
+        double yDiff = playerYPos - yOffset;
 
         /*
         If the player exceeds the upBorder and downBorder even with yOffset,
@@ -224,7 +223,7 @@ public class PlayState extends State implements StateMethods {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if (SwingUtilities.isLeftMouseButton(e) && !player.getIsGunOnCoolDown()) {
+        if (SwingUtilities.isLeftMouseButton(e) && !player.getIsGunOnCoolDown() && !player.getIsOnAir()) {
             player.setIsCharging(true);
         }
 
@@ -236,7 +235,7 @@ public class PlayState extends State implements StateMethods {
             Point2D.Float startCoordinate = player.getGunPointCoordinate();
             Point2D.Float endCoordinate = new Point2D.Float(e.getX(), e.getY());
             // Creates a projectile.
-            projectileManager.createPlayerProjectile(startCoordinate, endCoordinate, xOffset, yOffset);
+            projectileManager.createPlayerProjectile(startCoordinate, endCoordinate, xOffset, yOffset, player.getDamageValue());
             // Sets state of the player.
             player.setIsCharging(false);
             player.setIsShooting(true);
