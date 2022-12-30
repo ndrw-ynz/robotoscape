@@ -17,10 +17,11 @@ public class Cultist extends GroundEnemy {
      * @param bitHeight                     The height of the Cultist entity in pixels.
      * @param attentionAreaDiameterFactor   The diameter of the attention area of the Cultist entity.
      * @param entityScale                   The scale value scaling the appearance of the Cultist entity.
+     * @param damageValue                   The value of damage dealt by the enemy.
      * @param maxNumberOfHearts             The maximum number of hearts of the Cultist entity.
      */
-    public Cultist(int xPosition, int yPosition, int bitWidth, int bitHeight, float attentionAreaDiameterFactor, float entityScale, int maxNumberOfHearts) {
-        super(xPosition, yPosition, bitWidth, bitHeight, attentionAreaDiameterFactor, entityScale, maxNumberOfHearts);
+    public Cultist(int xPosition, int yPosition, int bitWidth, int bitHeight, float attentionAreaDiameterFactor, float entityScale, int damageValue, int maxNumberOfHearts) {
+        super(xPosition, yPosition, bitWidth, bitHeight, attentionAreaDiameterFactor, entityScale, damageValue, maxNumberOfHearts);
         setMovementSpeed(0.4f);
         animationState = "active";
         getAnimationImages();

@@ -16,10 +16,11 @@ public class RobotGround extends GroundEnemy{
      * @param bitHeight                     The height of the RobotGround entity in pixels.
      * @param attentionAreaDiameterFactor   The diameter of the attention area of the RobotGround entity.
      * @param entityScale                   The scale value scaling the appearance of the RobotGround entity.
+     * @param damageValue                   The value of damage dealt by the enemy.
      * @param maxNumberOfHearts             The maximum number of hearts of the RobotGround entity.
      */
-    public RobotGround(int xPosition, int yPosition, int bitWidth, int bitHeight, float attentionAreaDiameterFactor, float entityScale, int maxNumberOfHearts) {
-        super(xPosition, yPosition, bitWidth, bitHeight, attentionAreaDiameterFactor, entityScale, maxNumberOfHearts);
+    public RobotGround(int xPosition, int yPosition, int bitWidth, int bitHeight, float attentionAreaDiameterFactor, float entityScale, int damageValue, int maxNumberOfHearts) {
+        super(xPosition, yPosition, bitWidth, bitHeight, attentionAreaDiameterFactor, entityScale, damageValue, maxNumberOfHearts);
         animationState = "active";
         getAnimationImages();
     }

@@ -30,10 +30,11 @@ public abstract class Enemy extends Entity{
      * @param bitHeight                     The height of the enemy sprite in pixels.
      * @param attentionAreaDiameterFactor   The scaling factor for the diameter of the attention area of the enemy.
      * @param entityScale                   The scale value scaling the appearance of the enemy.
-     * @param maxNumberOfHearts             The maximum number of hearts of the entity.
+     * @param damageValue                   The value of damage dealt by the enemy.
+     * @param maxNumberOfHearts             The maximum number of hearts of the enemy.
      */
-    public Enemy(int xPosition, int yPosition, int bitWidth, int bitHeight, float attentionAreaDiameterFactor, float entityScale, int maxNumberOfHearts) {
-        super(xPosition, yPosition, bitWidth, bitHeight, entityScale, maxNumberOfHearts);
+    public Enemy(int xPosition, int yPosition, int bitWidth, int bitHeight, float attentionAreaDiameterFactor, float entityScale, int damageValue, int maxNumberOfHearts) {
+        super(xPosition, yPosition, bitWidth, bitHeight, entityScale, damageValue, maxNumberOfHearts);
         this.attentionAreaDiameterFactor = attentionAreaDiameterFactor;
         attentionArea = new Ellipse2D.Float(0, 0, attentionAreaDiameterFactor*bitWidth*entityScale+15, attentionAreaDiameterFactor*bitHeight*entityScale+15);
     }
@@ -84,9 +85,7 @@ public abstract class Enemy extends Entity{
 
     @Override
     public void updateEntity(Level level, TileManager tileManager) {
-        updateHitBox();
-        updateMovement(level, tileManager);
-        updateAnimation();
+        super.updateEntity(level, tileManager);
         updateAttentionArea();
     }
 
@@ -96,7 +95,7 @@ public abstract class Enemy extends Entity{
      * @param xOffset The x-value offset of the entity on the game screen.
      * @param yOffset The y-value offset of the entity on the game screen.
      */
-    public void renderAttentionArea(Graphics2D graphics, int xOffset, int yOffset) {
+    public void renderAttentionArea(Graphics2D graphics, double xOffset, double yOffset) {
         Ellipse2D.Float renderArea = attentionArea;
         renderArea.x -= xOffset;
         renderArea.y -= yOffset;

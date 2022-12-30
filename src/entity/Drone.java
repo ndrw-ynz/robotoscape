@@ -16,10 +16,11 @@ public class Drone extends AirEnemy{
      * @param bitHeight                     The height of the Drone entity in pixels.
      * @param attentionAreaDiameterFactor   The diameter of the attention area of the Drone entity.
      * @param entityScale                   The scale value scaling the appearance of the Drone entity.
+     * @param damageValue                   The value of damage dealt by the enemy.
      * @param maxNumberOfHearts             The maximum number of hearts of the Drone entity.
      */
-    public Drone(int xPosition, int yPosition, int bitWidth, int bitHeight, float attentionAreaDiameterFactor, float entityScale, int maxNumberOfHearts) {
-        super(xPosition, yPosition, bitWidth, bitHeight, attentionAreaDiameterFactor, entityScale, maxNumberOfHearts);
+    public Drone(int xPosition, int yPosition, int bitWidth, int bitHeight, float attentionAreaDiameterFactor, float entityScale, int damageValue, int maxNumberOfHearts) {
+        super(xPosition, yPosition, bitWidth, bitHeight, attentionAreaDiameterFactor, entityScale, damageValue, maxNumberOfHearts);
         setMovementSpeed(0.004f);
         animationState = "active";
         getAnimationImages();

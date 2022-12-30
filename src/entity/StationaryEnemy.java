@@ -20,10 +20,11 @@ public class StationaryEnemy extends Enemy {
      * @param bitHeight                     The height of the enemy sprite in pixels.
      * @param attentionAreaDiameterFactor   The scaling factor for the radius of the attention area of the enemy.
      * @param entityScale                   The scale value scaling the appearance of the enemy.
+     * @param damageValue                   The value of damage dealt by the enemy.
      * @param maxNumberOfHearts             The maximum number of hearts of the entity.
      */
-    public StationaryEnemy(int xPosition, int yPosition, int bitWidth, int bitHeight, float attentionAreaDiameterFactor, float entityScale, int maxNumberOfHearts) {
-        super(xPosition, yPosition, bitWidth, bitHeight, attentionAreaDiameterFactor, entityScale, maxNumberOfHearts);
+    public StationaryEnemy(int xPosition, int yPosition, int bitWidth, int bitHeight, float attentionAreaDiameterFactor, float entityScale, int damageValue, int maxNumberOfHearts) {
+        super(xPosition, yPosition, bitWidth, bitHeight, attentionAreaDiameterFactor, entityScale, damageValue, maxNumberOfHearts);
     }
 
     @Override
@@ -47,7 +48,7 @@ public class StationaryEnemy extends Enemy {
     }
 
     @Override
-    public void renderAttentionArea(Graphics2D graphics, int xOffset, int yOffset) {
+    public void renderAttentionArea(Graphics2D graphics, double xOffset, double yOffset) {
 
     }
 

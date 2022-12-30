@@ -19,10 +19,11 @@ public class Turret extends StationaryEnemy{
      * @param bitHeight                     The height of the Turret entity in pixels.
      * @param attentionAreaDiameterFactor   The diameter of the attention area of the Turret entity.
      * @param entityScale                   The scale value scaling the appearance of the Turret entity.
+     * @param damageValue                   The value of damage dealt by the enemy.
      * @param maxNumberOfHearts             The maximum number of hearts of the Turret entity.
      */
-    public Turret(int xPosition, int yPosition, int bitWidth, int bitHeight, float attentionAreaDiameterFactor, float entityScale, int maxNumberOfHearts) {
-        super(xPosition, yPosition, bitWidth, bitHeight, attentionAreaDiameterFactor, entityScale, maxNumberOfHearts);
+    public Turret(int xPosition, int yPosition, int bitWidth, int bitHeight, float attentionAreaDiameterFactor, float entityScale, int damageValue, int maxNumberOfHearts) {
+        super(xPosition, yPosition, bitWidth, bitHeight, attentionAreaDiameterFactor, entityScale, damageValue, maxNumberOfHearts);
         animationState = "passive";
         getAnimationImages();
     }
@@ -60,7 +61,7 @@ public class Turret extends StationaryEnemy{
     }
 
     @Override
-    public void renderAttentionArea(Graphics2D graphics, int xOffset, int yOffset) {
+    public void renderAttentionArea(Graphics2D graphics, double xOffset, double yOffset) {
 
     }
 

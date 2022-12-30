@@ -16,10 +16,11 @@ public class Abomination extends GroundEnemy{
      * @param bitHeight                     The height of the Abomination entity in pixels.
      * @param attentionAreaDiameterFactor   The diameter of the attention area of the Abomination entity.
      * @param entityScale                   The scale value scaling the appearance of the Abomination entity.
+     * @param damageValue                   The value of damage dealt by the enemy.
      * @param maxNumberOfHearts             The maximum number of hearts of the Abomination entity.
      */
-    public Abomination(int xPosition, int yPosition, int bitWidth, int bitHeight, float attentionAreaDiameterFactor, float entityScale, int maxNumberOfHearts) {
-        super(xPosition, yPosition, bitWidth, bitHeight, attentionAreaDiameterFactor, entityScale, maxNumberOfHearts);
+    public Abomination(int xPosition, int yPosition, int bitWidth, int bitHeight, float attentionAreaDiameterFactor, float entityScale, int damageValue, int maxNumberOfHearts) {
+        super(xPosition, yPosition, bitWidth, bitHeight, attentionAreaDiameterFactor, entityScale, damageValue, maxNumberOfHearts);
         setMovementSpeed(0.8f);
         animationState = "passive";
         getAnimationImages();

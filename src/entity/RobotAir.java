@@ -18,8 +18,8 @@ public class RobotAir extends AirEnemy{
      * @param entityScale                   The scale value scaling the appearance of the RobotAir entity.
      * @param maxNumberOfHearts             The maximum number of hearts of the RobotAir entity.
      */
-    public RobotAir(int xPosition, int yPosition, int bitWidth, int bitHeight, float attentionAreaDiameterFactor, float entityScale, int maxNumberOfHearts) {
-        super(xPosition, yPosition, bitWidth, bitHeight, attentionAreaDiameterFactor, entityScale, maxNumberOfHearts);
+    public RobotAir(int xPosition, int yPosition, int bitWidth, int bitHeight, float attentionAreaDiameterFactor, float entityScale, int damageValue, int maxNumberOfHearts) {
+        super(xPosition, yPosition, bitWidth, bitHeight, attentionAreaDiameterFactor, entityScale, damageValue, maxNumberOfHearts);
         setMovementSpeed(0.006f);
         animationState = "active";
         getAnimationImages();
