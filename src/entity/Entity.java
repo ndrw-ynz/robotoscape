@@ -26,8 +26,14 @@ public abstract class Entity {
     protected int bitHeight;
     /** The constant movement speed of the entity.*/
     protected float movementSpeed;
-    /** The condition determining if the entity is facing right. */
-    boolean facingRight;
+    /** The value of damage dealt by the entity.*/
+    protected int damageValue;
+    /** The condition determining if the entity is facing right.*/
+    protected boolean facingRight;
+    /** The condition determining if the entity can be damaged or not.*/
+    protected boolean isInvulnerable;
+    /** The condition determining if the entity is dead.*/
+    protected boolean isDead;
     /**
      *  A HashMap containing the entity's animation state as a String key and its
      *  sequence of animation images as an array of BufferedImage.
@@ -42,6 +48,11 @@ public abstract class Entity {
      * on a given animation state.
      */
     protected double animationCounter;
+    /**
+     *  A double used as a counter for setting an alpha composite as the entity
+     *  is in an invulnerable state.
+     */
+    protected double invulnerabilityCounter;
     /**
      * The scaling factor of the entity as it is displayed on the game screen.
      */
@@ -71,11 +82,12 @@ public abstract class Entity {
      * @param entityScale       The scale value scaling the appearance of the entity.
      * @param maxNumberOfHearts The maximum number of hearts of the entity.
      */
-    public Entity(int xPosition, int yPosition, int bitWidth, int bitHeight, float entityScale, int maxNumberOfHearts) {
+    public Entity(int xPosition, int yPosition, int bitWidth, int bitHeight, float entityScale, int damageValue, int maxNumberOfHearts) {
         this.entityCoordinate = new Point2D.Float(xPosition, yPosition);
         this.bitWidth = bitWidth;
         this.bitHeight = bitHeight;
         this.entityScale = entityScale;
+        this.damageValue = damageValue;
         this.hearts = new Hearts(maxNumberOfHearts);
         this.hitBox = new Rectangle2D.Float();
     }
@@ -86,10 +98,19 @@ public abstract class Entity {
      * @param xOffset   The x-value offset of the entity on the game screen.
      * @param yOffset   The y-value offset of the entity on the game screen.
      */
-    public void renderEntity(Graphics2D graphics, int xOffset, int yOffset) {
+    public void renderEntity(Graphics2D graphics, double xOffset, double yOffset) {
         BufferedImage playerImage = animations.get(animationState)[(int) Math.floor(animationCounter)];
         int width = (int) (bitWidth*entityScale);
         int height = (int) (bitHeight*entityScale);
+        // Adds composite IF vulnerable.
+        if (isInvulnerable) {
+            float alphaValue = ((int) invulnerabilityCounter % 2 == 0) ? 0.5f : 0.1f;
+            AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alphaValue);
+            graphics.setComposite(alphaComposite);
+        } else {
+            AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f);
+            graphics.setComposite(alphaComposite);
+        }
         if (!facingRight) {
             graphics.drawImage(playerImage, (int) (entityCoordinate.x +width-xOffset), (int) (entityCoordinate.y -yOffset), -width, height, null);
         } else {
@@ -103,7 +124,7 @@ public abstract class Entity {
      * renderHitBox displays the hit box of the player on the game screen.
      * @param graphics The graphics object that draws images on the game screen.
      */
-    protected void renderHitBox(Graphics2D graphics, int xOffset, int yOffset) {
+    protected void renderHitBox(Graphics2D graphics, double xOffset, double yOffset) {
         graphics.setColor(Color.GREEN);
         graphics.drawRect((int) (hitBox.x-xOffset), (int) (hitBox.y-yOffset), (int) (hitBox.width*entityScale), (int) (hitBox.height*entityScale));
     }
@@ -117,6 +138,7 @@ public abstract class Entity {
         updateHitBox();
         updateMovement(level, tileManager);
         updateAnimation();
+        updateVulnerability();
     }
 
     /**
@@ -132,14 +154,38 @@ public abstract class Entity {
     abstract protected void updateMovement(Level level, TileManager tileManager);
 
     /**
+     * updateAnimation updates the current animation state of the entity.
+     */
+    abstract protected void updateAnimation();
+
+    /**
+     * updateVulnerability updates the state of vulnerability of the entity.
+     */
+    protected void updateVulnerability() {
+        if (!isInvulnerable) return;
+        invulnerabilityCounter += 0.2;
+        if (invulnerabilityCounter >= 10) {
+            invulnerabilityCounter = 0;
+            isInvulnerable = false;
+            if (hearts.getCurrentNumberOfHearts() <= 0) isDead = true;
+        }
+    }
+
+    /**
+     * initiateDamage carries out the damage dealt to the entity according to the damageValue.
+     * @param damageValue The value of damage to deduct to the currentNumberOfHearts of the entity's heart.
+     */
+    public void initiateDamage(int damageValue) {
+        if (isInvulnerable) return;
+        isInvulnerable = true;
+        hearts.carryDamage(damageValue);
+    }
+
+    /**
      * getAnimationImages fetches the animation states and images of the entity.
      */
     abstract protected void getAnimationImages();
 
-    /**
-     * updateAnimation updates the current animation state of the entity.
-     */
-    abstract protected void updateAnimation();
 
     /**
      * getEntityCoordinate fetches the x,y-coordinate position of the entity.
@@ -160,6 +206,24 @@ public abstract class Entity {
      * @return Returns the bit width of the entity.
      */
     public int getBitWidth() {return bitWidth;}
+
+    /**
+     * getDamageValue fetches the damage value of the entity.
+     * @return Returns the damage value of the entity.
+     */
+    public int getDamageValue() {return damageValue;}
+
+    /**
+     * isInvulnerable determines if the entity is in an invulnerable state.
+     * @return Returns a boolean value determining if the entity is in an invulnerable state.
+     */
+    public boolean isInvulnerable() {return isInvulnerable;}
+
+    /**
+     * isDead determines if the entity is dead.
+     * @return Returns a boolean value determining if the entity is dead.
+     */
+    public boolean isDead() {return isDead;}
 
     /**
      * getHitBox fetches the hit box of the entity on the game.
