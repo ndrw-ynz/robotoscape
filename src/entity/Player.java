@@ -50,10 +50,11 @@ public class Player extends Entity {
      * @param bitWidth          The width of the player sprite in pixels.
      * @param bitHeight         The height of the player sprite in pixels.
      * @param entityScale       The scale value scaling the appearance of the player.
+     * @param damageValue       The value of damage dealt by the enemy.
      * @param maxNumberOfHearts The maximum number of hearts of the player.
      */
-    public Player(int xPosition, int yPosition, int bitWidth, int bitHeight, float entityScale, int maxNumberOfHearts) {
-        super(xPosition, yPosition-13, bitWidth, bitHeight, entityScale, maxNumberOfHearts); // -13 on y for allowance as it spawns, so it doesn't possibly clip on floor.
+    public Player(int xPosition, int yPosition, int bitWidth, int bitHeight, float entityScale, int damageValue, int maxNumberOfHearts) {
+        super(xPosition, yPosition-13, bitWidth, bitHeight, entityScale, damageValue, maxNumberOfHearts); // -13 on y for allowance as it spawns, so it doesn't possibly clip on floor.
         movementSpeed = 2f;
         facingRight = true;
         animationCounter = 0;
@@ -61,7 +62,7 @@ public class Player extends Entity {
         getAnimationImages();
         updateHitBox();
         isOnAir = true;
-        gunPointCoordinate = new Point2D.Float(xPosition + 27, yPosition + 8);
+        gunPointCoordinate = new Point2D.Float();
     }
 
     @Override
@@ -216,7 +217,7 @@ public class Player extends Entity {
         if (isGunOnCoolDown) {
             gunShootCounter += 0.01;
         }
-        if (isMovingRight) {
+        if (facingRight) {
             gunPointCoordinate.x = entityCoordinate.x + 27;
         } else {
             gunPointCoordinate.x = entityCoordinate.x - 10;
@@ -306,6 +307,12 @@ public class Player extends Entity {
     public boolean getIsGunOnCoolDown() {
         return isGunOnCoolDown;
     }
+
+    /**
+     * getIsOnAir fetches the isOnAir state of the player.
+     * @return Returns a boolean value determining the player's isOnAir state.
+     */
+    public boolean getIsOnAir() {return isOnAir;}
 
     /**
      * getGunPointCoordinate fetches the x,y-coordinate of the player's gun point.
