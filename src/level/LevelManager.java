@@ -36,7 +36,7 @@ public class LevelManager {
      * @param xOffset The x-value offset of the tiles on the game screen.
      * @param yOffset The y-value offset of the tiles on the game screen.
      */
-    public void renderLevel(Graphics graphics, int xOffset, int yOffset) {
+    public void renderLevel(Graphics graphics, double xOffset, double yOffset) {
         int levelWidth = currentLevel.getLevelWidthTiles();
         int levelHeight = currentLevel.getLevelHeightTiles();
         Tile[] mapTiles = tileManager.getMapTilesMonochrome(); //TODO: Later change this, generalize to diff levels.
@@ -44,7 +44,7 @@ public class LevelManager {
 
         for (int row = 0; row < levelHeight; row++) {
             for (int col = 0; col < levelWidth; col++) {
-                graphics.drawImage(mapTiles[levelData[row][col]].getImage(), game.getTileSize()*col-xOffset, game.getTileSize()*row-yOffset, game.getTileSize(), game.getTileSize(), null);
+                graphics.drawImage(mapTiles[levelData[row][col]].getImage(), (int) (game.getTileSize()*col-xOffset), (int) (game.getTileSize()*row-yOffset), game.getTileSize(), game.getTileSize(), null);
             }
         }
     }
