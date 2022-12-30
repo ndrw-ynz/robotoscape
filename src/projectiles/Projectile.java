@@ -17,6 +17,8 @@ public class Projectile {
     private final Point2D.Float coordinates;
     /** The interactive hit box of the projectile.*/
     private final Rectangle2D.Float hitBox;
+    /** The damage value of the projectile.*/
+    private final int damageValue;
     /** The counter used for transitioning between each animation frame of the projectile as it is shot.*/
     private float shootCounter;
     /** The counter used for transitioning between each animation frame of the projectile as it explodes.*/
@@ -29,21 +31,23 @@ public class Projectile {
     private boolean isActive;
     /** The exploding state of the projectile.*/
     private boolean isExploding;
+    /** Determines if the projectile has already dealt damage.*/
+    private boolean hasDealtDamage;
     /** The set of animation frames used for the projectile as it is shot.*/
     private final BufferedImage[] shootAnimations;
     /** The set of animation frames used for the projectile as it explodes.*/
     private final BufferedImage[] explosionAnimations;
 
-    public Projectile(Point2D.Float start, Point2D.Float end, int xOffset, int yOffset, float speed, String shootAnimationPath, String explosionAnimationPath) {
+    public Projectile(Point2D.Float start, Point2D.Float end, double xOffset, double yOffset, float speed, int damageValue, String shootAnimationPath, String explosionAnimationPath) {
         this.shootAnimations = extractAnimationImages(shootAnimationPath, 16, 16);
         this.explosionAnimations = extractAnimationImages(explosionAnimationPath, 16, 16);
         this.coordinates = new Point2D.Float(start.x, start.y);
         this.hitBox = new Rectangle2D.Float(start.x, start.y, 20, 20);
-        float directionX = (end.x - start.x + xOffset);
-        float directionY = (end.y - start.y + yOffset);
+        float directionX = (int) (end.x - start.x + xOffset);
+        float directionY = (int) (end.y - start.y + yOffset);
         this.direction = Math.atan2(directionY, directionX);
-        System.out.println(direction);
         this.speed = speed;
+        this.damageValue = damageValue;
         this.isActive = true;
     }
 
@@ -53,12 +57,12 @@ public class Projectile {
      * @param xOffset   The x-value offset of the entity on the game screen.
      * @param yOffset   The y-value offset of the entity on the game screen.
      */
-    public void renderProjectile(Graphics2D graphics, int xOffset, int yOffset) {
+    public void renderProjectile(Graphics2D graphics, double xOffset, double yOffset) {
         if (!isExploding) {
-            graphics.drawImage(shootAnimations[(int) Math.floor(shootCounter)], (int) coordinates.x - xOffset, (int) coordinates.y - yOffset, 20, 20, null);
+            graphics.drawImage(shootAnimations[(int) Math.floor(shootCounter)], (int) (coordinates.x - xOffset), (int) (coordinates.y - yOffset), 20, 20, null);
             renderHitBox(graphics, xOffset, yOffset);
         } else {
-            graphics.drawImage(explosionAnimations[(int) Math.floor(explodeCounter)], (int) coordinates.x - xOffset, (int) coordinates.y - yOffset, 20, 20, null);
+            graphics.drawImage(explosionAnimations[(int) Math.floor(explodeCounter)], (int) (coordinates.x - xOffset), (int) (coordinates.y - yOffset), 20, 20, null);
         }
     }
 
@@ -68,9 +72,9 @@ public class Projectile {
      * @param xOffset   The x-value offset of the entity on the game screen.
      * @param yOffset   The y-value offset of the entity on the game screen.
      */
-    private void renderHitBox(Graphics2D graphics, int xOffset, int yOffset) {
+    private void renderHitBox(Graphics2D graphics, double xOffset, double yOffset) {
         graphics.setColor(Color.ORANGE);
-        graphics.drawRect((int) hitBox.x - xOffset, (int)hitBox.y - yOffset, (int) hitBox.width, (int) hitBox.height);
+        graphics.drawRect((int) (hitBox.x - xOffset), (int) (hitBox.y - yOffset), (int) hitBox.width, (int) hitBox.height);
     }
 
     /**
@@ -102,11 +106,15 @@ public class Projectile {
      */
     public Rectangle2D.Float getHitBox() {return hitBox;}
 
+    public int getDamageValue() {return damageValue;}
+
     /**
      * isActive fetches the active state of the projectile.
      * @return Returns a boolean value determining the isActive state of the projectile.
      */
     public boolean isActive() {return isActive;}
+
+    public boolean getHasDealtDamage() {return hasDealtDamage;}
 
     /**
      * setIsExploding sets the projectile's state isExploding by a boolean value.
@@ -115,4 +123,6 @@ public class Projectile {
     public void setIsExploding(boolean isExploding) {
         this.isExploding = isExploding;
     }
+
+    public void setHasDealtDamage(boolean hasDealtDamage) {this.hasDealtDamage = hasDealtDamage;}
 }

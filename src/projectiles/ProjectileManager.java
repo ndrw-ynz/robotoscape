@@ -24,7 +24,7 @@ public class ProjectileManager {
     /** Manages all the enemies used in the game.*/
     private final EnemyManager enemyManager;
     /** Contains all the projectiles of the player in the game.*/
-    private ArrayList<Projectile> playerProjectiles = new ArrayList<>();
+    private final ArrayList<Projectile> playerProjectiles = new ArrayList<>();
 
     /**
      * ProjectileManager is a class that manages all the projectiles created in the game.
@@ -45,15 +45,14 @@ public class ProjectileManager {
      * @param xOffset   The x-value offset of the entity on the game screen.
      * @param yOffset   The y-value offset of the entity on the game screen.
      */
-    public void createPlayerProjectile(Point2D.Float start, Point2D.Float end, int xOffset, int yOffset) {
-        playerProjectiles.add(new Projectile(start, end, xOffset, yOffset, 3.2f, Atlas.FIRE_PROJECTILE, Atlas.FIRE_EXPLOSION));
+    public void createPlayerProjectile(Point2D.Float start, Point2D.Float end, double xOffset, double yOffset, int damageValue) {
+        playerProjectiles.add(new Projectile(start, end, xOffset, yOffset, 3.2f, damageValue, Atlas.FIRE_PROJECTILE, Atlas.FIRE_EXPLOSION));
     }
 
     /**
      * updatePlayerProjectiles updates the projectiles created by the player.
      */
     public void updatePlayerProjectiles() {
-        if (playerProjectiles.isEmpty()) return;
         // If the projectile is not active, remove the projectile from the list, deleting it.
         playerProjectiles.removeIf(projectile -> !projectile.isActive());
         for (Projectile projectile : playerProjectiles) {
@@ -61,8 +60,10 @@ public class ProjectileManager {
             projectile.updateProjectile();
             // Check if projectile intersects with the enemy hit box.
             for (Enemy enemy: enemyManager.getEnemyList()) {
-                if (projectile.getHitBox().intersects(enemy.getHitBox())) {
+                if (projectile.getHitBox().intersects(enemy.getHitBox()) && !projectile.getHasDealtDamage()) {
                     projectile.setIsExploding(true);
+                    projectile.setHasDealtDamage(true);
+                    enemy.initiateDamage(1);
                 }
             }
             // Check if projectile is on a collision tile or goes out of boundaries.
@@ -78,7 +79,7 @@ public class ProjectileManager {
      * @param xOffset   The x-value offset of the entity on the game screen.
      * @param yOffset   The y-value offset of the entity on the game screen.
      */
-    public void renderPlayerProjectiles(Graphics2D graphics, int xOffset, int yOffset) {
+    public void renderPlayerProjectiles(Graphics2D graphics, double xOffset, double yOffset) {
         if (playerProjectiles.isEmpty()) return;
         for (Projectile projectile : playerProjectiles) {
             projectile.renderProjectile(graphics, xOffset, yOffset);
