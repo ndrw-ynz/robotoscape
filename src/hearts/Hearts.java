@@ -42,7 +42,7 @@ public class Hearts {
      * @param xOffset   The x-value offset of the entity on the game screen.
      * @param yOffset   The y-value offset of the entity on the game screen.
      */
-    public void displayHearts(Graphics2D graphics, Entity entity, int xOffset, int yOffset) {
+    public void displayHearts(Graphics2D graphics, Entity entity, double xOffset, double yOffset) {
         animationCounter += 0.15f;
         if (animationCounter > 3.0) {
             animationCounter = 0.0f;
@@ -52,10 +52,24 @@ public class Hearts {
 
         Point.Float entityCenterTop = new Point.Float((entityHitBox.x+(entityHitBox.width*entity.getEntityScale())/2), entity.getEntityCoordinate().y);
 
-        int xCoordinate = (int) (entityCenterTop.x - (maxNumberOfHearts*16 - 2*(maxNumberOfHearts-1))/2);
+        int xCoordinate = (int) (entityCenterTop.x - (currentNumberOfHearts*16 - 2*(currentNumberOfHearts-1))/2);
         int yCoordinate = (int) (entityCenterTop.y - 15);
-        for (int i = 0; i < maxNumberOfHearts; i++) {
-            graphics.drawImage(currentHeart,xCoordinate+i*18 - xOffset, yCoordinate - yOffset, 16, 16, null);
+        for (int i = 0; i < currentNumberOfHearts; i++) {
+            graphics.drawImage(currentHeart,(int) (xCoordinate+i*18 - xOffset), (int) (yCoordinate - yOffset), 16, 16, null);
         }
     }
+
+    /**
+     * carryDamage decreases the number of currentNumberOfHearts of the Hearts instance.
+     * @param damageValue The value of damage to deduct to the currentNumberOfHearts.
+     */
+    public void carryDamage(int damageValue) {
+        currentNumberOfHearts -= damageValue;
+    }
+
+    /**
+     * getCurrentNumberOfHearts fetches the value of currentNumberOfHearts.
+     * @return Returns the value of currentNumberOfHearts.
+     */
+    public int getCurrentNumberOfHearts() {return currentNumberOfHearts;}
 }
