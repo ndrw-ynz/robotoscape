@@ -88,7 +88,6 @@ public class Loading {
      */
     public void updateLoadingPhase(double currentTime) {
         double timeDifference = (currentTime - loadingInitTime) / 1000000000.0;
-        System.out.println("Loading time:" + timeDifference);
 
         if (timeDifference < 2) {
             LoadingPhase.phase = LoadingPhase.START;
@@ -111,8 +110,6 @@ public class Loading {
         alphaValue += transitionToOpacity ? -speed : speed;
         if (alphaValue < 0) alphaValue = 0;
         if (alphaValue > 255) alphaValue = 255;
-        System.out.println("Speed: " + speed);
-        System.out.println("Alpha value: " + alphaValue);
     }
 
     /**
@@ -124,16 +121,17 @@ public class Loading {
      * @param endY The y-coordinate position of the destination point.
      */
     public void setOffsetSpeeds(int startX, int startY, int endX, int endY) {
-        System.out.println("Start x,y" + startX + "," + startY + " End x,y" + endX + "," + endY);
         double deltaX = endX - startX;
         double deltaY = endY - startY;
-        double direction = Math.toRadians(Math.atan(deltaY/deltaX));
-//        double speed = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
-//        System.out.println("Direction: " + direction);
-//        System.out.println("cos" + Math.cos(direction));
-//        System.out.println("sin" + Math.sin(direction));
-        xOffsetSpeed = (deltaX / 6000000000.0) * Math.cos(direction); //(deltaX / 6000000000.0)
-        yOffsetSpeed = (deltaY / 6000000000.0) * Math.sin(direction); //(deltaY / 6000000000.0)
+        double direction = Math.atan2(deltaY, deltaX);
+        System.out.println("x speed: " + Math.abs(deltaX) / 600.0);
+        System.out.println("y speed: " + Math.abs(deltaY) / 600.0);
+
+        xOffsetSpeed = (Math.abs(deltaX) / 2200.0) * Math.cos(direction);
+        yOffsetSpeed = (Math.abs(deltaY) / 2200.0) * Math.sin(direction);
+
+        System.out.println("xOffsetSpeed : " + xOffsetSpeed + " yOffsetSpeed : " + yOffsetSpeed);
+
     }
 
     /**
