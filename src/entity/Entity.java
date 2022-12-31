@@ -116,7 +116,7 @@ public abstract class Entity {
         } else {
             graphics.drawImage(playerImage, (int) (entityCoordinate.x -xOffset), (int) (entityCoordinate.y -yOffset), width, height, null);
         }
-        renderHitBox(graphics, xOffset, yOffset);
+//        renderHitBox(graphics, xOffset, yOffset);
         hearts.displayHearts(graphics, this, xOffset, yOffset);
     }
 
