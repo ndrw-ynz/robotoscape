@@ -37,11 +37,11 @@ public class EnemyManager {
                 switch (entry.getKey()) {
                     case "abomination" -> enemyList.add(new Abomination(coordinate.x, coordinate.y-11, 16, 16, 6,2.7f, 1,4));
                     case "cultist" -> enemyList.add(new Cultist(coordinate.x, coordinate.y-8, 16, 16, 5, 2.5f, 2,3));
-                    case "drone" -> enemyList.add(new Drone(coordinate.x, coordinate.y, 16, 16, 8, 2.5f, 1, 2));
-                    case "robot_air" -> enemyList.add(new RobotAir(coordinate.x, coordinate.y, 16, 16, 5, 2.5f, 2, 4));
+                    case "drone" -> enemyList.add(new Drone(coordinate.x, coordinate.y, 16, 16, 10, 2.5f, 1, 1));
+                    case "robot_air" -> enemyList.add(new RobotAir(coordinate.x, coordinate.y, 16, 16, 8, 2.5f, 2, 4));
                     case "robot_ground" -> enemyList.add(new RobotGround(coordinate.x, coordinate.y-9, 16, 16, 10, 2.5f, 3,6));
                     case "skull_slime" -> enemyList.add(new SkullSlime(coordinate.x, coordinate.y-9, 16, 16, 4, 2.5f, 2, 5));
-                    case "turret" -> enemyList.add(new Turret(coordinate.x, coordinate.y, 16, 16, 10, 2.5f, 1, 1));
+                    case "turret" -> enemyList.add(new Turret(coordinate.x, coordinate.y, 16, 16, 12, 2.5f, 1, 1));
                 }
             }
         }
@@ -57,7 +57,7 @@ public class EnemyManager {
         enemyList.removeIf(Entity::isDead);
         for (Enemy enemy: enemyList) {
             enemy.renderEntity(graphics, xOffset, yOffset);
-            enemy.renderAttentionArea(graphics, xOffset, yOffset);
+//            enemy.renderAttentionArea(graphics, xOffset, yOffset);
         }
 
     }
