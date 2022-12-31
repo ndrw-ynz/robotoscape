@@ -60,7 +60,7 @@ public class Projectile {
     public void renderProjectile(Graphics2D graphics, double xOffset, double yOffset) {
         if (!isExploding) {
             graphics.drawImage(shootAnimations[(int) Math.floor(shootCounter)], (int) (coordinates.x - xOffset), (int) (coordinates.y - yOffset), 20, 20, null);
-            renderHitBox(graphics, xOffset, yOffset);
+//            renderHitBox(graphics, xOffset, yOffset);
         } else {
             graphics.drawImage(explosionAnimations[(int) Math.floor(explodeCounter)], (int) (coordinates.x - xOffset), (int) (coordinates.y - yOffset), 20, 20, null);
         }
