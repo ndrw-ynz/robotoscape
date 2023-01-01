@@ -3,6 +3,7 @@ package entity;
 import level.Level;
 import tile.TileManager;
 
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 
 import static utility.PlayUtils.getEntityCenterHitBox;
@@ -14,6 +15,7 @@ import static utility.PlayUtils.getEntityCenterHitBox;
 public abstract class AirEnemy extends Enemy{
 
     protected Point2D.Float targetPoint;
+    private double direction;
 
     /**
      * AirEnemy is the superclass of all moving and interactive air-based enemy entities
@@ -33,17 +35,18 @@ public abstract class AirEnemy extends Enemy{
     }
 
     @Override public void active() {
-        // change movementspeed?
+        attentionArea = new Ellipse2D.Float(0, 0, 2*attentionAreaDiameterFactor*bitWidth*entityScale+15, 2*attentionAreaDiameterFactor*bitHeight*entityScale+15);
+        updateAttentionArea();
     }
 
     @Override public void passive() {
-        // change movementspeed?
+        attentionArea = new Ellipse2D.Float(0, 0, attentionAreaDiameterFactor*bitWidth*entityScale+15, attentionAreaDiameterFactor*bitHeight*entityScale+15);
+        updateAttentionArea();
         targetPoint = getEntityCenterHitBox(this);
     }
 
     @Override
     public void updateActivity(Level level, Player player) {
-        // todo: get target point
         isActive = attentionArea.intersects(player.getHitBox());
         if (isActive) {
             targetPoint = getEntityCenterHitBox(player);
@@ -56,11 +59,16 @@ public abstract class AirEnemy extends Enemy{
 
     @Override
     protected void updateMovement(Level level, TileManager tileManager) {
-        // TODO: add movement, from target point (if active)
-        if(!isActive) return;
-        double deltaX = targetPoint.x - getEntityCoordinate().x;
-        double deltaY = targetPoint.y - getEntityCoordinate().y;
-        entityCoordinate.x += deltaX*movementSpeed;
-        entityCoordinate.y += deltaY*movementSpeed;
+        if (!isActive) return;
+        updateDirection();
+        entityCoordinate.x += movementSpeed*Math.cos(direction);
+        entityCoordinate.y += movementSpeed*Math.sin(direction);
+    }
+
+    private void updateDirection() {
+        Point2D.Float centerHitBoxCoordinate = getEntityCenterHitBox(this);
+        double deltaX = targetPoint.x - centerHitBoxCoordinate.x;
+        double deltaY = targetPoint.y - centerHitBoxCoordinate.y;
+        direction = Math.atan2(deltaY, deltaX);
     }
 }
