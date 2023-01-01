@@ -94,7 +94,6 @@ public class PlayState extends State implements StateMethods {
 
     @Override
     public void render(Graphics graphics) {
-        // TODO: Soon, add condition for loading state isLoading.
         if (isLoading) {
             loading.renderLoading(graphics, levelManager.getCurrentLevel().getLevelDimension());
         } else {
@@ -108,7 +107,6 @@ public class PlayState extends State implements StateMethods {
 
     @Override
     public void update() {
-        // TODO: Soon, add condition for loading state isLoading.
         if (isLoading) {
             Level currentLevel = levelManager.getCurrentLevel();
             loading.updateLoadingPhase(game.getGameTime());
@@ -251,6 +249,7 @@ public class PlayState extends State implements StateMethods {
     @Override
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
+            case KeyEvent.VK_ENTER -> isLoading = false;
             case KeyEvent.VK_SPACE -> player.setIsJumping(true);
             case KeyEvent.VK_A -> player.setIsMovingLeft(true);
             case KeyEvent.VK_D -> player.setIsMovingRight(true);

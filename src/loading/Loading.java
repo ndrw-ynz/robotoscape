@@ -88,7 +88,6 @@ public class Loading {
      */
     public void updateLoadingPhase(double currentTime) {
         double timeDifference = (currentTime - loadingInitTime) / 1000000000.0;
-
         if (timeDifference < 2) {
             LoadingPhase.phase = LoadingPhase.START;
         } else if (timeDifference <= 8) {
@@ -131,7 +130,6 @@ public class Loading {
         yOffsetSpeed = (Math.abs(deltaY) / 2200.0) * Math.sin(direction);
 
         System.out.println("xOffsetSpeed : " + xOffsetSpeed + " yOffsetSpeed : " + yOffsetSpeed);
-
     }
 
     /**
