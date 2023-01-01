@@ -21,7 +21,7 @@ public class Drone extends AirEnemy{
      */
     public Drone(int xPosition, int yPosition, int bitWidth, int bitHeight, float attentionAreaDiameterFactor, float entityScale, int damageValue, int maxNumberOfHearts) {
         super(xPosition, yPosition, bitWidth, bitHeight, attentionAreaDiameterFactor, entityScale, damageValue, maxNumberOfHearts);
-        setMovementSpeed(0.004f);
+        setMovementSpeed(0.8f);
         animationState = "active";
         getAnimationImages();
     }
