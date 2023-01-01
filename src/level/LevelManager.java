@@ -39,7 +39,7 @@ public class LevelManager {
     public void renderLevel(Graphics graphics, double xOffset, double yOffset) {
         int levelWidth = currentLevel.getLevelWidthTiles();
         int levelHeight = currentLevel.getLevelHeightTiles();
-        Tile[] mapTiles = tileManager.getMapTilesMonochrome(); //TODO: Later change this, generalize to diff levels.
+        Tile[] mapTiles = tileManager.getMapTilesMonochrome();
         int [][] levelData = currentLevel.getLevelData();
 
         for (int row = 0; row < levelHeight; row++) {
@@ -49,10 +49,17 @@ public class LevelManager {
         }
     }
 
+    /**
+     * updateLevel increments the current level of the game by one level.
+     */
     public void updateLevel() {
-
+        currentLevel = new Level(game, currentLevel.getLevelNumber()+1);
     }
 
+    /**
+     * getCurrentLevel fetches the current level of the game.
+     * @return Returns a Level instance containing the state of the current level of the game.
+     */
     public Level getCurrentLevel() {
         return currentLevel;
     }
