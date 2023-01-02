@@ -3,11 +3,13 @@ package menu;
 import gamestate.GameState;
 import loading.LoadingPhase;
 import main.Game;
+import text.InteractiveText;
+import text.RegularText;
 import utility.Atlas;
 
 import java.awt.*;
 
-import static utility.MenuUtils.isWithinBoundary;
+import static utility.TextUtils.isWithinBoundary;
 
 /**
  * The Menu class contains the contents of the menu of the game.
@@ -16,13 +18,13 @@ public class Menu {
     /**Comprises the entire component of the game and manages its states.*/
     private final Game game;
     /**The title text of the menu. */
-    private final MenuText titleText;
+    private final RegularText titleText;
     /**The interactive start text of the menu. */
-    private final MenuInteractiveText startText;
+    private final InteractiveText startText;
     /**The interactive credits text of the menu. */
-    private final MenuInteractiveText creditsText;
+    private final InteractiveText creditsText;
     /**The interactive exit text of the menu. */
-    private final MenuInteractiveText exitText;
+    private final InteractiveText exitText;
 
     /**
      * Menu | Initializes the menu component of the game.
@@ -41,10 +43,10 @@ public class Menu {
         int numSelections = 3;  // The number of interactive text in selection.
         int selectionHeight = selectionsTotalHeight / numSelections; // The height for each interactive text in selection.
 
-        titleText = new MenuText(titleY, "robotoscape", titleSize, Atlas.TARRGET_FONT); // Initializes titleText.
-        startText = new MenuInteractiveText(selectionsY, "Start", 60, Atlas.TARRGET_FONT); // Initializes startText
-        creditsText = new MenuInteractiveText(selectionsY + selectionHeight, "Credits", 60, Atlas.TARRGET_FONT); // Initializes creditsText.
-        exitText = new MenuInteractiveText(selectionsY + selectionHeight*2, "Exit", 60, Atlas.TARRGET_FONT); // Initializes exitText.
+        titleText = new RegularText(titleY, "robotoscape", titleSize, 230, Atlas.TARRGET_FONT); // Initializes titleText.
+        startText = new InteractiveText(selectionsY, "Start", 60, 230, Atlas.TARRGET_FONT); // Initializes startText
+        creditsText = new InteractiveText(selectionsY + selectionHeight, "Credits", 60, 230, Atlas.TARRGET_FONT); // Initializes creditsText.
+        exitText = new InteractiveText(selectionsY + selectionHeight*2, "Exit", 60, 230, Atlas.TARRGET_FONT); // Initializes exitText.
     }
 
     /**
@@ -60,7 +62,7 @@ public class Menu {
 
     /**
      * updateInteractiveText | Sets the activity status of the interactive
-     * text in the menu based on the position of the mouse on the screen.
+     * text in the menu based on the x,y-coordinate position of the mouse on the game screen.
      * @param x The x-coordinate position of the mouse.
      * @param y The y-coordinate position of the mouse.
      */
@@ -75,12 +77,13 @@ public class Menu {
      * by the user on an active interactive text.
      */
     public void updateState() {
-        if(startText.getIsActive()) {
+        if(startText.isActive()) {
             GameState.state = GameState.PLAY;
             LoadingPhase.phase = LoadingPhase.INIT;
-        } else if (creditsText.getIsActive()) {
+        } else if (creditsText.isActive()) {
+            // TODO: redirect to credits.
             // Change game state to credits
-        } else if (exitText.getIsActive()) {
+        } else if (exitText.isActive()) {
             game.exitGame();
         }
     }
