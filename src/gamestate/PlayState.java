@@ -2,6 +2,7 @@ package gamestate;
 
 import entity.EnemyManager;
 import entity.Player;
+import gameoverlay.PauseOverlay;
 import level.Level;
 import level.LevelManager;
 import loading.Loading;
@@ -40,8 +41,12 @@ public class PlayState extends State implements StateMethods {
     private final ProjectileManager projectileManager;
     /**Manages the loading screen of the game as introduced before the level starts.*/
     private Loading loading;
+    /**Manages the pause overlay screen of the game.*/
+    private final PauseOverlay pauseOverlay;
     /**The state of the play state, whether it's displaying loading or not.*/
     private boolean isLoading;
+    /**The state of the play state, whether the game is paused or not.*/
+    private boolean isPaused;
     /**The offset of the player as it reaches the border on the x-axis of the game screen.*/
     private double xOffset;
     /**The maximum value of offset of the player in the x-axis of the game screen.*/
@@ -76,6 +81,8 @@ public class PlayState extends State implements StateMethods {
 
         player = new Player(levelManager.getCurrentLevel().getPlayerXPosition(), levelManager.getCurrentLevel().getPlayerYPosition(), 36, 23, game.getEntityScale(), 1,4);
 
+        pauseOverlay = new PauseOverlay(game, this, 570, 240);
+
         int levelWidthTiles = levelManager.getCurrentLevel().getLevelWidthTiles();
         int levelHeightTiles =  levelManager.getCurrentLevel().getLevelHeightTiles();
 
@@ -103,6 +110,7 @@ public class PlayState extends State implements StateMethods {
         levelManager.renderLevel(graphics, xOffset, yOffset);
         enemyManager.renderEnemies((Graphics2D) graphics, xOffset, yOffset);
         projectileManager.renderPlayerProjectiles((Graphics2D) graphics, xOffset, yOffset);
+        if (isPaused) pauseOverlay.renderPause((Graphics2D) graphics);
     }
 
     @Override
@@ -135,7 +143,7 @@ public class PlayState extends State implements StateMethods {
         if (!isLoading) {
             player.updateEntity(levelManager.getCurrentLevel(), tileManager);
         }
-        levelManager.updateLevel();
+//        levelManager.updateLevel();
         enemyManager.updateEnemies(levelManager.getCurrentLevel(), tileManager, player);
         projectileManager.updatePlayerProjectiles();
     }
@@ -216,11 +224,12 @@ public class PlayState extends State implements StateMethods {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-
+        if (isPaused) pauseOverlay.updateState();
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
+        if (isPaused) return;
         if (SwingUtilities.isLeftMouseButton(e) && !player.getIsGunOnCoolDown() && !player.getIsOnAir()) {
             player.setIsCharging(true);
         }
@@ -229,6 +238,7 @@ public class PlayState extends State implements StateMethods {
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        if (isPaused) return;
         if (SwingUtilities.isLeftMouseButton(e) && !player.getIsGunOnCoolDown() && player.getIsCharging()) {
             Point2D.Float startCoordinate = player.getGunPointCoordinate();
             Point2D.Float endCoordinate = new Point2D.Float(e.getX(), e.getY());
@@ -243,12 +253,13 @@ public class PlayState extends State implements StateMethods {
 
     @Override
     public void mouseMoved(MouseEvent e) {
-
+        if (isPaused) pauseOverlay.updateInteractiveText(e.getX(), e.getY());
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
+            case KeyEvent.VK_ESCAPE -> isPaused = !isPaused;
             case KeyEvent.VK_ENTER -> isLoading = false;
             case KeyEvent.VK_SPACE -> player.setIsJumping(true);
             case KeyEvent.VK_A -> player.setIsMovingLeft(true);
@@ -263,5 +274,19 @@ public class PlayState extends State implements StateMethods {
             case KeyEvent.VK_A -> player.setIsMovingLeft(false);
             case KeyEvent.VK_D -> player.setIsMovingRight(false);
         }
+    }
+
+    /**
+     * isPaused fetches the current isPaused state of PlayState.
+     * @return Returns a boolean value determining whether the current game is paused or not.
+     */
+    public boolean isPaused() {return isPaused;}
+
+    /**
+     * setIsPaused sets the isPaused state of PlayState.
+     * @param isPaused The boolean value determining the isPaused state of PlayState.
+     */
+    public void setIsPaused(boolean isPaused) {
+        this.isPaused = isPaused;
     }
 }
