@@ -15,88 +15,48 @@ import java.awt.event.MouseEvent;
  */
 public class CreditsState extends State implements StateMethods {
 
-    /**The credits object */
-    private Credits credits;
+    private final Credits credits;
 
     public CreditsState(Game game) {
         super(game);
         this.credits = new Credits(game);
     }
 
-    /**
-     * render | Displays the different components of a given state
-     * on the game screen.
-     *
-     * @param graphics The graphics object that draws state components on the game screen.
-     */
     @Override
     public void render(Graphics graphics) {
-
+        credits.renderCredits(graphics);
     }
 
-    /**
-     * update | Updates the states of the game.
-     */
     @Override
     public void update() {
 
     }
 
-    /**
-     * mouseClicked | Executes events following the click of the user's mouse.
-     *
-     * @param e A MouseEvent containing information about user mouse input.
-     */
     @Override
     public void mouseClicked(MouseEvent e) {
-
+        credits.updateState();
     }
 
-    /**
-     * mousePressed | Executes events following the pressed buttons of the user's mouse.
-     *
-     * @param e A MouseEvent containing information about user mouse input.
-     */
     @Override
     public void mousePressed(MouseEvent e) {
 
     }
 
-    /**
-     * mouseReleased | Executes events following the release of the buttons of the user's mouse.
-     *
-     * @param e A MouseEvent containing information about user mouse input.
-     */
     @Override
     public void mouseReleased(MouseEvent e) {
 
     }
 
-    /**
-     * mouseMoved | Executes events following the movement of the user's mouse.
-     *
-     * @param e A MouseEvent containing information about user mouse input.
-     */
     @Override
     public void mouseMoved(MouseEvent e) {
-
+        credits.updateInteractiveText(e.getX(), e.getY());
     }
 
-    /**
-     * keyPressed | Executes events following the press of the keys of the user's keyboard.
-     *
-     * @param e A KeyEvent containing information about user keyboard input.
-     */
     @Override
     public void keyPressed(KeyEvent e) {
 
     }
 
-    /**
-     * keyReleased | Executes events following the release of the keys of the user's keyboard.
-     *
-     * @param e A KeyEvent containing information about user keyboard input.
-     */
     @Override
     public void keyReleased(KeyEvent e) {
 
