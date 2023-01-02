@@ -36,6 +36,7 @@ public class Level {
     /**
      * Level | Initializes a level and its attributes and
      * data based on the level number.
+     * @param game The main game containing the different states of the game and their configuratio.
      * @param levelNumber The level number of a level.
      */
     public Level(Game game, int levelNumber) {
