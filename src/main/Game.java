@@ -1,5 +1,6 @@
 package main;
 
+import gamestate.CreditsState;
 import gamestate.GameState;
 import gamestate.MenuState;
 import gamestate.PlayState;
@@ -38,6 +39,8 @@ public class Game implements Runnable{
     private PlayState playState;
     /**The state containing the state and behavior for the menu state of the game.*/
     private MenuState menuState;
+    /**The state containing the state and behavior for the credits state of the game.*/
+    private CreditsState creditsState;
     /**Stores the current time of the game in nanoseconds.*/
     private long gameTime;
 
@@ -64,6 +67,7 @@ public class Game implements Runnable{
     private void initStates() {
         playState = new PlayState(this, gamePanel);
         menuState = new MenuState(this);
+        creditsState = new CreditsState(this);
     }
 
     /**
@@ -88,6 +92,7 @@ public class Game implements Runnable{
                 }
                 playState.render(graphics);
             }
+            case CREDITS -> creditsState.render(graphics);
             default -> {
             }
         }
@@ -186,6 +191,12 @@ public class Game implements Runnable{
     public MenuState getMenuState() {
         return menuState;
     }
+
+    /**
+     * getCreditsState fetches the credit state of the game.
+     * @return Returns the CreditState of the game.
+     */
+    public CreditsState getCreditsState() {return creditsState;}
 
     /**
      * getScreenWidth | Fetches the width of the game screen.
