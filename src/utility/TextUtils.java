@@ -3,10 +3,10 @@ package utility;
 import java.awt.*;
 
 /**
- * MenuUtils is a class containing utility methods for
+ * TextUtils is a class containing utility methods for
  * use in the menu state of the game.
  */
-public abstract class MenuUtils {
+public abstract class TextUtils {
 
     /**
      * isWithinBoundary checks if the given cartesian coordinate position of the mouse
