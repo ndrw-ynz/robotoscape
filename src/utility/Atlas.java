@@ -73,6 +73,8 @@ public abstract class Atlas {
     // FONTS USED IN THE GAME.
     /**The file path for Robus font used in the game.*/
     public static final String ROBUS_FONT = "fonts/Robus.ttf";
+    /**The file path for Minimal Pixel font used in the game.*/
+    public static final String MINIMAL_PIXEL_FONT = "fonts/MinimalPixel.ttf";
     /**The file path for Tarrget font used in the game.*/
     public static final String TARRGET_FONT = "fonts/TarrgetPlatinumItalic.ttf";
 
