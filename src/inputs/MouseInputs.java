@@ -18,7 +18,10 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
         switch(GameState.state) {
             case MENU:
                 gamePanel.getGame().getMenuState().mouseClicked(e);
-
+            case PLAY:
+                gamePanel.getGame().getPlayingState().mouseClicked(e);
+            case CREDITS:
+                gamePanel.getGame().getCreditsState().mouseClicked(e);
         }
 
     }
@@ -61,6 +64,10 @@ public class MouseInputs implements MouseListener, MouseMotionListener {
         switch(GameState.state) {
             case MENU:
                 gamePanel.getGame().getMenuState().mouseMoved(e);
+            case PLAY:
+                gamePanel.getGame().getPlayingState().mouseMoved(e);
+            case CREDITS:
+                gamePanel.getGame().getCreditsState().mouseMoved(e);
         }
     }
 }
