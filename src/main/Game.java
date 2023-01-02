@@ -52,6 +52,13 @@ public class Game implements Runnable{
     }
 
     /**
+     * resetPlayState creates a new PlayState of the game.
+     */
+    public void resetPlayState() {
+        playState = new PlayState(this, gamePanel);
+    }
+
+    /**
      * initStates | Initializes the component states of the game.
      */
     private void initStates() {
@@ -96,7 +103,7 @@ public class Game implements Runnable{
                 if (LoadingPhase.phase == LoadingPhase.INIT) {
                     playState.initLoading();
                 }
-                playState.update();
+                if (!playState.isPaused()) playState.update();
             }
         }
     }
