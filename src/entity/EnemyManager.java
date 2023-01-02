@@ -59,7 +59,6 @@ public class EnemyManager {
             enemy.renderEntity(graphics, xOffset, yOffset);
 //            enemy.renderAttentionArea(graphics, xOffset, yOffset);
         }
-
     }
 
     /**

@@ -15,7 +15,7 @@ import java.awt.event.MouseEvent;
 public class MenuState extends State implements StateMethods {
 
     /**Menu object containing the components of the menu state.*/
-    private Menu menu;
+    private final Menu menu;
 
     /**
      * MenuState | Initializes the menu state of the game.
