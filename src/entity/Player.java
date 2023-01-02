@@ -203,6 +203,10 @@ public class Player extends Entity {
             animationState = "charge";
         }
 
+        if (isInvulnerable) {
+            animationState = "damaged";
+        }
+
         animationCounter += 0.05;
         if (animationCounter > animations.get(animationState).length) {
             animationCounter = 0.0;
