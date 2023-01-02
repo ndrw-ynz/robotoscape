@@ -81,8 +81,7 @@ public class Menu {
             GameState.state = GameState.PLAY;
             LoadingPhase.phase = LoadingPhase.INIT;
         } else if (creditsText.isActive()) {
-            // TODO: redirect to credits.
-            // Change game state to credits
+            GameState.state = GameState.CREDITS;
         } else if (exitText.isActive()) {
             game.exitGame();
         }
