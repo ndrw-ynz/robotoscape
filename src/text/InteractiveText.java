@@ -1,15 +1,15 @@
-package menu;
+package text;
 
 import java.awt.*;
 
-import static utility.MenuUtils.*;
+import static utility.TextUtils.*;
 
 /**
  * MenuInteractiveText is a class extending class MenuText,
  * containing additional functionalities for interaction with
  * the text.
  */
-public class MenuInteractiveText extends MenuText{
+public class InteractiveText extends RegularText {
 
     /**The interactive box surrounding the boundaries of the text.*/
     private Rectangle boundaryBox;
@@ -27,11 +27,12 @@ public class MenuInteractiveText extends MenuText{
      * @param y The y-coordinate position of the text.
      * @param text A String containing the text to be displayed.
      * @param textSize The size of the text.
+     * @param alphaValue The alpha value of the text.
      * @param fontFamily The font family of the text.
      */
-    public MenuInteractiveText(int y, String text, int textSize, String fontFamily) {
-        super(y, text, textSize, fontFamily);
-        color = Color.WHITE;
+    public InteractiveText(int y, String text, int textSize, int alphaValue, String fontFamily) {
+        super(y, text, textSize, alphaValue, fontFamily);
+        color = new Color(255, 255, 255, alphaValue);
     }
 
     @Override
@@ -39,7 +40,7 @@ public class MenuInteractiveText extends MenuText{
         blinkingCounter += 0.2;
         if (blinkingCounter > 5) blinkingCounter = 0;
         color = (isActive && blinkingCounter < 2.5) ? Color.YELLOW : Color.MAGENTA;
-        if (!isActive) color = Color.WHITE;
+        if (!isActive) color = new Color(255, 255, 255, alphaValue);
         int x = getTextCenterXPosition(text, font, graphics, screenWidth);
         int widthText = getTextWidth(text, font, graphics);
         int heightText = getTextHeight(text, font, graphics);
@@ -62,8 +63,8 @@ public class MenuInteractiveText extends MenuText{
     public void setIsActive(boolean isActive) {this.isActive = isActive;}
 
     /**
-     * getIsActive | Fetches the activity status of the interactive text.
-     * @return Returns the activityy status of the interactive text.
+     * isActive | Fetches the activity status of the interactive text.
+     * @return Returns the activity status of the interactive text.
      */
-    public boolean getIsActive() {return this.isActive;}
+    public boolean isActive() {return this.isActive;}
 }

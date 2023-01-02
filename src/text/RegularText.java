@@ -1,16 +1,16 @@
-package menu;
+package text;
 
 import utility.Atlas;
 
 import java.awt.*;
 
-import static utility.MenuUtils.getTextCenterXPosition;
+import static utility.TextUtils.getTextCenterXPosition;
 
 /**
- * The class MenuText is used to create text
+ * The class RegularText is used to create text
  * displayed on the menu of the game.
  */
-public class MenuText {
+public class RegularText {
 
     /**The y-coordinate position of the text.*/
     protected final int y;
@@ -18,20 +18,24 @@ public class MenuText {
     protected final String text;
     /**The size of the text.*/
     protected final int textSize;
+    /**The alpha value of the text.*/
+    protected final int alphaValue;
     /**The font family of the text.*/
     protected final Font font;
 
     /**
-     * MenuText | Initializes the text used in the menu.
+     * RegularText initializes the text used in the game.
      * @param y The y-coordinate position of the text.
      * @param text A String containing the text to be displayed.
      * @param textSize The size of the text.
+     * @param alphaValue The alpha value of the text.
      * @param fontFamily The font family of the text.
      */
-    public MenuText(int y, String text, int textSize, String fontFamily) {
+    public RegularText(int y, String text, int textSize, int alphaValue, String fontFamily) {
         this.y = y;
         this.text = text;
         this.textSize = textSize;
+        this.alphaValue = alphaValue;
         this.font = Atlas.getFont(fontFamily).deriveFont(Font.PLAIN, textSize);
     }
 
@@ -41,10 +45,7 @@ public class MenuText {
      * @param screenWidth The width of the game screen in pixels.
      */
     public void renderText(Graphics graphics, int screenWidth) {
-//        blinkingCounter += 0.2;
-//        if (blinkingCounter > 5) blinkingCounter = 0;
-//        Color color = (blinkingCounter < 2.5) ? Color.YELLOW : Color.MAGENTA;
-        Color color = Color.WHITE;
+        Color color = new Color(255, 255, 255, alphaValue);
         int x = getTextCenterXPosition(text, font, graphics, screenWidth);
         graphics.setFont(font);
         graphics.setColor(color);
