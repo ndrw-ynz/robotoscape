@@ -71,8 +71,6 @@ public abstract class Atlas {
     public static final String FIRE_EXPLOSION = "projectile/fire_explosion.png";
 
     // FONTS USED IN THE GAME.
-    /**The file path for Silver font used in the game.*/
-    public static final String SILVER_FONT = "fonts/Silver.ttf";
     /**The file path for Robus font used in the game.*/
     public static final String ROBUS_FONT = "fonts/Robus.ttf";
     /**The file path for Tarrget font used in the game.*/
