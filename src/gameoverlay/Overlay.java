@@ -1,5 +1,6 @@
 package gameoverlay;
 
+import gamestate.PlayState;
 import main.Game;
 
 import java.awt.*;
@@ -11,6 +12,8 @@ import java.awt.*;
 public abstract class Overlay {
     /**Comprises the entire component of the game and manages its state.*/
     protected Game game;
+    /**The current play state of the game.*/
+    protected PlayState playState;
     /**The width of the overlay window in pixels.*/
     protected int windowWidth;
     /**The height of the overlay window in pixels.*/
@@ -24,8 +27,9 @@ public abstract class Overlay {
      * @param windowWidth   The width of the overlay window in pixels.
      * @param windowHeight  The height of the overlay window in pixels.
      */
-    public Overlay(Game game, int windowWidth, int windowHeight) {
+    public Overlay(Game game, PlayState playState, int windowWidth, int windowHeight) {
         this.game = game;
+        this.playState = playState;
         this.windowWidth = windowWidth;
         this.windowHeight = windowHeight;
         this.windowCoordinate = new Point((game.getScreenWidth() - windowWidth)/2,  (game.getScreenHeight() - windowHeight)/2);
@@ -36,13 +40,16 @@ public abstract class Overlay {
      * drawOverlayWindow displays the overlay window to the game screen.
      * @param graphics  The graphics object that draws images on the game screen.
      */
-    protected void drawOverlayWindow(Graphics2D graphics) {
+    public void renderOverlay(Graphics2D graphics) {
         graphics.setColor(new Color(0, 0, 0, 230));
         graphics.fillRoundRect(windowCoordinate.x, windowCoordinate.y, windowWidth, windowHeight, 15, 15);
+
+        drawOverlayText(graphics);
 
         graphics.setColor(new Color(255, 255, 255, 200));
         graphics.setStroke(new BasicStroke(3));
         graphics.drawRoundRect(windowCoordinate.x + 5, windowCoordinate.y + 5, windowWidth - 10, windowHeight - 10, 5, 5);
+
     }
 
     /**
