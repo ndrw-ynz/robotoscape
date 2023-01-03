@@ -16,14 +16,13 @@ import static utility.TextUtils.isWithinBoundary;
  * It contains the contents for the pause overlay of the game.
  */
 public class PauseOverlay extends Overlay{
-    private final PlayState playState;
+
     /**The pause text of the pause overlay.*/
     private final RegularText pauseText;
     /**The interactive continue text of the pause overlay.*/
     private final InteractiveText continueText;
     /**The interactive exit text of the pause overlay.*/
     private final InteractiveText exitText;
-
 
     /**
      * PauseOverlay instantiates an overlay that displays the pause overlay of the game.
@@ -32,8 +31,7 @@ public class PauseOverlay extends Overlay{
      * @param windowHeight  The height of the overlay window in pixels.
      */
     public PauseOverlay(Game game, PlayState playState, int windowWidth, int windowHeight) {
-        super(game, windowWidth, windowHeight);
-        this.playState = playState;
+        super(game, playState, windowWidth, windowHeight);
         int textSpacePadding = 35;
         int textSpaceHeight = windowHeight - textSpacePadding*2;
         int bigTextHeight = 50;
@@ -45,17 +43,6 @@ public class PauseOverlay extends Overlay{
         this.pauseText = new RegularText(textYStart, "Game Paused", bigTextHeight, 200, Atlas.TARRGET_FONT);
         this.continueText = new InteractiveText(textYStart+allocatedMainSpacing, "continue", selectionsTextHeight, 200, Atlas.TARRGET_FONT);
         this.exitText = new InteractiveText(textYStart+allocatedMainSpacing+selectionsTextHeight+20, "Exit", selectionsTextHeight, 200, Atlas.TARRGET_FONT);
-    }
-
-    /**
-     * renderPause renders the pause overlay to the game screen.
-     * @param graphics  The graphics object that draws images on the game screen.
-     */
-    public void renderPause(Graphics2D graphics) {
-        graphics.setColor(new Color(0, 0, 0, 150));
-        graphics.fillRect(0, 0, game.getScreenWidth(), game.getScreenHeight());
-        drawOverlayWindow(graphics);
-        drawOverlayText(graphics);
     }
 
     @Override
