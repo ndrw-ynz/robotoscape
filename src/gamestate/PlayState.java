@@ -2,6 +2,7 @@ package gamestate;
 
 import entity.EnemyManager;
 import entity.Player;
+import gameoverlay.GameOverOverlay;
 import gameoverlay.PauseOverlay;
 import level.Level;
 import level.LevelManager;
@@ -43,6 +44,8 @@ public class PlayState extends State implements StateMethods {
     private Loading loading;
     /**Manages the pause overlay screen of the game.*/
     private final PauseOverlay pauseOverlay;
+    /**Manages the game over overlay screen of the game.*/
+    private final GameOverOverlay gameOverOverlay;
     /**The state of the play state, whether it's displaying loading or not.*/
     private boolean isLoading;
     /**The state of the play state, whether the game is paused or not.*/
@@ -82,6 +85,7 @@ public class PlayState extends State implements StateMethods {
         player = new Player(levelManager.getCurrentLevel().getPlayerXPosition(), levelManager.getCurrentLevel().getPlayerYPosition(), 36, 23, game.getEntityScale(), 1,4);
 
         pauseOverlay = new PauseOverlay(game, this, 570, 240);
+        gameOverOverlay = new GameOverOverlay(game, this, 570, 160);
 
         int levelWidthTiles = levelManager.getCurrentLevel().getLevelWidthTiles();
         int levelHeightTiles =  levelManager.getCurrentLevel().getLevelHeightTiles();
@@ -110,11 +114,13 @@ public class PlayState extends State implements StateMethods {
         levelManager.renderLevel(graphics, xOffset, yOffset);
         enemyManager.renderEnemies((Graphics2D) graphics, xOffset, yOffset);
         projectileManager.renderPlayerProjectiles((Graphics2D) graphics, xOffset, yOffset);
-        if (isPaused) pauseOverlay.renderPause((Graphics2D) graphics);
+        if (isPaused && !player.isDead()) pauseOverlay.renderOverlay((Graphics2D) graphics);
+        if (player.isDead()) gameOverOverlay.renderOverlay((Graphics2D) graphics);
     }
 
     @Override
     public void update() {
+        if (player.isDead()) return;
         if (isLoading) {
             Level currentLevel = levelManager.getCurrentLevel();
             loading.updateLoadingPhase(game.getGameTime());
@@ -224,7 +230,8 @@ public class PlayState extends State implements StateMethods {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (isPaused) pauseOverlay.updateState();
+        if (isPaused && !player.isDead()) pauseOverlay.updateState();
+        if (player.isDead()) gameOverOverlay.updateState();
     }
 
     @Override
@@ -253,7 +260,8 @@ public class PlayState extends State implements StateMethods {
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        if (isPaused) pauseOverlay.updateInteractiveText(e.getX(), e.getY());
+        if (isPaused && !player.isDead()) pauseOverlay.updateInteractiveText(e.getX(), e.getY());
+        if (player.isDead()) gameOverOverlay.updateInteractiveText(e.getX(), e.getY());
     }
 
     @Override
