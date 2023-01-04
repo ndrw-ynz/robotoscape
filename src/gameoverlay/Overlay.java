@@ -41,6 +41,9 @@ public abstract class Overlay {
      * @param graphics  The graphics object that draws images on the game screen.
      */
     public void renderOverlay(Graphics2D graphics) {
+        graphics.setColor(new Color(0, 0, 0, 200));
+        graphics.fillRect(0, 0, game.getScreenWidth(), game.getScreenHeight());
+
         graphics.setColor(new Color(0, 0, 0, 230));
         graphics.fillRoundRect(windowCoordinate.x, windowCoordinate.y, windowWidth, windowHeight, 15, 15);
 
@@ -49,7 +52,6 @@ public abstract class Overlay {
         graphics.setColor(new Color(255, 255, 255, 200));
         graphics.setStroke(new BasicStroke(3));
         graphics.drawRoundRect(windowCoordinate.x + 5, windowCoordinate.y + 5, windowWidth - 10, windowHeight - 10, 5, 5);
-
     }
 
     /**
