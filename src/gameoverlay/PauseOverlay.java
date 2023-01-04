@@ -54,8 +54,8 @@ public class PauseOverlay extends Overlay{
 
     @Override
     public void updateInteractiveText(int x, int y) {
-        continueText.setIsActive(isWithinBoundary(x, y, continueText.getBoundaryBox()));
-        exitText.setIsActive(isWithinBoundary(x, y, exitText.getBoundaryBox()));
+        if (continueText.isBoundaryBoxSet()) continueText.setIsActive(isWithinBoundary(x, y, continueText.getBoundaryBox()));
+        if (exitText.isBoundaryBoxSet()) exitText.setIsActive(isWithinBoundary(x, y, exitText.getBoundaryBox()));
     }
 
     @Override

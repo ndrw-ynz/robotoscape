@@ -42,7 +42,7 @@ public class GameOverOverlay extends Overlay{
 
     @Override
     public void updateInteractiveText(int x, int y) {
-        exitText.setIsActive(isWithinBoundary(x, y, exitText.getBoundaryBox()));
+        if (exitText.isBoundaryBoxSet()) exitText.setIsActive(isWithinBoundary(x, y, exitText.getBoundaryBox()));
     }
 
     @Override
