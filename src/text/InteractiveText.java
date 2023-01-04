@@ -13,6 +13,8 @@ public class InteractiveText extends RegularText {
 
     /**The interactive box surrounding the boundaries of the text.*/
     private Rectangle boundaryBox;
+    /**Determines if the boundary box of the interactive text is set.*/
+    private boolean isBoundaryBoxSet;
     /**The color of the text.*/
     private Color color;
     /**The condition of the text as it is active when the mouse is overing the text.*/
@@ -20,9 +22,8 @@ public class InteractiveText extends RegularText {
     /**Counter used to create blinking effect on menu text.*/
     protected float blinkingCounter;
 
-
     /**
-     * MenuInteractiveText | Initializes the text with interactive properties displayed
+     * MenuInteractiveText initializes the text with interactive properties displayed
      * in the menu.
      * @param y The y-coordinate position of the text.
      * @param text A String containing the text to be displayed.
@@ -45,26 +46,33 @@ public class InteractiveText extends RegularText {
         int widthText = getTextWidth(text, font, graphics);
         int heightText = getTextHeight(text, font, graphics);
         boundaryBox = new Rectangle(x, y-textSize, widthText, heightText);
+        isBoundaryBoxSet = true;
         graphics.setFont(font);
         graphics.setColor(color);
         graphics.drawString(text, x, y);
     }
 
     /**
-     * getBoundaryBox | Fetches the boundary box surrounding the interactive text.
+     * getBoundaryBox fetches the boundary box surrounding the interactive text.
      * @return Returns the boundary box of the interactive text.
      */
     public Rectangle getBoundaryBox() {return boundaryBox;}
 
     /**
-     * setIsActive | Sets the value of the activity of the interactive text.
+     * setIsActive sets the value of the activity of the interactive text.
      * @param isActive The active status of the interactive text.
      */
     public void setIsActive(boolean isActive) {this.isActive = isActive;}
 
     /**
-     * isActive | Fetches the activity status of the interactive text.
+     * isActive fetches the activity status of the interactive text.
      * @return Returns the activity status of the interactive text.
      */
     public boolean isActive() {return this.isActive;}
+
+    /**
+     * isBoundaryBoxSet fetches the value of isBoundarySet of the interactive text.
+     * @return Returns the value of isBoundarySet of the interactive text.
+     */
+    public boolean isBoundaryBoxSet() {return this.isBoundaryBoxSet;}
 }
