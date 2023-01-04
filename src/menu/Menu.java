@@ -67,9 +67,9 @@ public class Menu {
      * @param y The y-coordinate position of the mouse.
      */
     public void updateInteractiveText(int x, int y) {
-        startText.setIsActive(isWithinBoundary(x, y, startText.getBoundaryBox()));
-        creditsText.setIsActive(isWithinBoundary(x, y, creditsText.getBoundaryBox()));
-        exitText.setIsActive(isWithinBoundary(x, y, exitText.getBoundaryBox()));
+        if (startText.isBoundaryBoxSet()) startText.setIsActive(isWithinBoundary(x, y, startText.getBoundaryBox()));
+        if (creditsText.isBoundaryBoxSet()) creditsText.setIsActive(isWithinBoundary(x, y, creditsText.getBoundaryBox()));
+        if (exitText.isBoundaryBoxSet()) exitText.setIsActive(isWithinBoundary(x, y, exitText.getBoundaryBox()));
     }
 
     /**
