@@ -69,6 +69,10 @@ public class Player extends Entity {
     public void updateEntity(Level level, TileManager tileManager) {
         super.updateEntity(level, tileManager);
         updateGunState();
+        // For damage when player is on a spike.
+        if (isEntityOnDamageTile(entityCoordinate.x, entityCoordinate.y, this, level, tileManager)) {
+            initiateDamage(1);
+        }
     }
 
     /**
@@ -186,7 +190,6 @@ public class Player extends Entity {
      */
     @Override
     protected void updateAnimation() {
-        // TODO: Improve how player animations are handled based on state of player.
         if (isMovingLeft || isMovingRight) {
             animationState = "move";
         } else if (isOnAir) {
