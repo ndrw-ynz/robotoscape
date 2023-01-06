@@ -81,6 +81,7 @@ public class ProjectileManager {
      */
     public void renderPlayerProjectiles(Graphics2D graphics, double xOffset, double yOffset) {
         if (playerProjectiles.isEmpty()) return;
+        playerProjectiles.removeIf(projectile -> !projectile.isActive());
         for (Projectile projectile : playerProjectiles) {
             projectile.renderProjectile(graphics, xOffset, yOffset);
         }
