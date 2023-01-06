@@ -15,8 +15,8 @@ public class TileManager {
     /**Stores tile data used in building levels in a Tile array.*/
     private Tile[] mapTilesMonochrome;
     /**Stores a list of tiles that don't have collision properties.*/
-    public static final ArrayList<Integer> tileMonochromeNonCollisions = new ArrayList<>(Arrays.asList(0,4,5,24,25,26,140,141,142,166));
-
+    public static final ArrayList<Integer> tileMonochromeNonCollisions = new ArrayList<>(Arrays.asList(0,4,5,24,25,26,122,140,141,142,166));
+    public static final ArrayList<Integer> tileMonochromeDamage = new ArrayList<>(Arrays.asList(122, 166));
     /**
      * TileManager | Initializes the tile manager of the game.
      */
@@ -36,10 +36,10 @@ public class TileManager {
             for (int col = 0; col < 20; col++) {
                 int index = row * 20 + col;
                 boolean allowCollision = !tileMonochromeNonCollisions.contains(index);
-                mapTilesMonochrome[index] = new Tile(monochromeTilesetImage.getSubimage(col * 16, row * 16, 16, 16), allowCollision);
+                boolean dealsDamage = tileMonochromeDamage.contains(index);
+                mapTilesMonochrome[index] = new Tile(monochromeTilesetImage.getSubimage(col * 16, row * 16, 16, 16), allowCollision, dealsDamage);
             }
         }
-        // add future tiles here if there is
     }
 
     /**
