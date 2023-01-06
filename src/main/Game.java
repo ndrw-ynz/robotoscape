@@ -15,10 +15,6 @@ import java.awt.*;
 public class Game implements Runnable{
     /**The panel of the game where the components of different game states are displayed.*/
     private final GamePanel gamePanel;
-    /**The pre-determined updates-per-second of the game.*/
-    private final int UPS = 200;
-    /**The pre-determined frames-per-second of the game.*/
-    private final int FPS = 120;
     /**The pre-determined size of sprites in the game.*/
     protected final int BIT_SIZE = 16;
     /**The pre-determined maximum number of columns containing tiles/entities in the screen.*/
@@ -43,6 +39,7 @@ public class Game implements Runnable{
     private CreditsState creditsState;
     /**Stores the current time of the game in nanoseconds.*/
     private long gameTime;
+    private int currentUpdates;
 
     /**
      * Game | Comprises the entire component of the game and manages its states.
@@ -126,8 +123,9 @@ public class Game implements Runnable{
      */
     @Override
     public void run() {
-
+        int FPS = 120;
         double timePerFrame = 1000000000.0 / FPS;
+        int UPS = 200;
         double timePerUpdate = 1000000000.0 / UPS;
 
         long previousTime = System.nanoTime();
@@ -163,6 +161,7 @@ public class Game implements Runnable{
             if (System.currentTimeMillis() - lastCheck >= 1000) {
                 lastCheck = System.currentTimeMillis();
                 System.out.println("FPS: " + frames + " | UPS: " + updates);
+                currentUpdates = updates;
                 frames = 0;
                 updates = 0;
 
@@ -171,10 +170,11 @@ public class Game implements Runnable{
     }
 
     /**
-     * getUPS | Fetches the UPS of the game.
-     * @return Returns the UPS of the game.
+     * getCurrentUpdates fetches the current updates-per-second of the game from the game loop.
+     * @return Returns the current updates-per-second of the game from the game loop.
      */
-    public int getUPS() {return UPS;}
+    public int getCurrentUpdates() {return currentUpdates;}
+
 
     /**
      * getPlayingState | Fetches the playing state of the game.
