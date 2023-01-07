@@ -26,17 +26,15 @@ public class Level {
     private final int levelHeightTiles;
     /**Contains the respective tile data for each row,col-coordinate tile in the game.*/
     private int[][] levelData;
-    /**The x-coordinate position of the player based on the level image.*/
-    private int playerXPosition;
-    /**The y-coordinate position of the player based on the level image.*/
-    private int playerYPosition;
+    /**The x,y-coordinate spawn coordinate of the player.*/
+    private Point playerCoordinate;
     /**The enemies in the level and their corresponding coordinates.*/
     private final HashMap<String, ArrayList<Point>> enemyCoordinates = new HashMap<>();
 
     /**
-     * Level | Initializes a level and its attributes and
+     * Level initializes a level and its attributes and
      * data based on the level number.
-     * @param game The main game containing the different states of the game and their configuratio.
+     * @param game The main game containing the different states of the game and their configuration.
      * @param levelNumber The level number of a level.
      */
     public Level(Game game, int levelNumber) {
@@ -50,7 +48,7 @@ public class Level {
     }
 
     /**
-     * setupLevelData | Sets up the level data of the level based on
+     * setupLevelData sets up the level data of the level based on
      * the level number, and parses its level image with its RGB values
      * which contain the level's associated tile value from the tile manager.
      * The data is stored in a 2D array, with its rows representing the
@@ -74,8 +72,7 @@ public class Level {
                 }
                 // Player position
                 if (blue == 255 && rgbTotal == 255) {
-                    playerXPosition = game.getTileSize()*col;
-                    playerYPosition = game.getTileSize()*row;
+                    playerCoordinate = new Point(game.getTileSize()*col, game.getTileSize()*row);
                 }
 
                 // Enemy position
@@ -138,7 +135,7 @@ public class Level {
     }
 
     /**
-     * getLevelData | Fetches the data of the level stored in a 2D array.
+     * getLevelData fetches the data of the level stored in a 2D array.
      * @return Returns a 2D int array containing the individual tile
      *         values on a given row,col-coordinate.
      */
@@ -147,7 +144,7 @@ public class Level {
     }
 
     /**
-     * getLevelWidthTiles | Fetches the width of the level based on the
+     * getLevelWidthTiles fetches the width of the level based on the
      *                      number of its tiles on the y-axis..
      * @return Returns the width of the level in tiles.
      */
@@ -156,7 +153,7 @@ public class Level {
     }
 
     /**
-     * getLevelHeightTiles | Fetches the height of the level based on the
+     * getLevelHeightTiles fetches the height of the level based on the
      *                       number of its tiles in the x-axis.
      * @return Returns the height of the level in tiles.
      */
@@ -165,33 +162,25 @@ public class Level {
     }
 
     /**
-     * getLevelDimension | Fetches the width,height dimension of the level.
+     * getLevelDimension fetches the width,height dimension of the level.
      * @return Returns the dimension of the level containing its width and height.
      */
     public Dimension getLevelDimension() {return new Dimension(levelWidthTiles * game.getTileSize(), levelHeightTiles * game.getTileSize());}
 
     /**
-     * getLevelNumber | Fetches the level number of the level.
+     * getLevelNumber Fetches the level number of the level.
      * @return Returns the level number of the level.
      */
     public int getLevelNumber() {return levelNumber;}
 
     /**
-     * getPlayerXPosition | Fetches the x-coordinate position of the player based
-     * on the level.
-     * @return Returns the x-coordinate position of the player.
+     * getPlayerCoordinate fetches the x,y-coordinate spawn point position of the player.
+     * @return Returns a Point containing the x,y-coordinate spawn point position of the player.
      */
-    public int getPlayerXPosition() {return playerXPosition;}
+    public Point getPlayerCoordinate() {return playerCoordinate;}
 
     /**
-     * getPlayerYPosition | Fetches the y-coordinate position of the player
-     * based on the level.
-     * @return Returns the y-coordinate position of the player.
-     */
-    public int getPlayerYPosition() {return playerYPosition;}
-
-    /**
-     * getEnemyCoordinates | Fetches the HashMap containing the coordinates of the enemies in the game level.
+     * getEnemyCoordinates fetches the HashMap containing the coordinates of the enemies in the game level.
      * @return Returns a HashMap<String, ArrayList<Point>> object, with its key value pair as the enemy type and the coordinates of the enemies.
      */
     public HashMap<String, ArrayList<Point>> getEnemyCoordinates() {
