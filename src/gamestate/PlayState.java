@@ -9,7 +9,6 @@ import level.LevelManager;
 import loading.Loading;
 import loading.LoadingPhase;
 import main.Game;
-import main.GamePanel;
 import projectiles.ProjectileManager;
 import tile.TileManager;
 
@@ -19,6 +18,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 
+import static utility.LoadingUtils.getScreenDestination;
+
 /**
  * The PlayState class extends the State class and implements
  * StateMethods.
@@ -27,9 +28,6 @@ import java.awt.geom.Point2D;
  * game screen.
  */
 public class PlayState extends State implements StateMethods {
-
-    /**The panel of the game where the components of different game states are displayed.*/
-    private final GamePanel gamePanel;
     /**The player that is controlled by the user in the game.*/
     private final Player player;
     /**Manages the levels of the game and its state.*/
@@ -71,18 +69,15 @@ public class PlayState extends State implements StateMethods {
      * PlayState | Initializes the play state of the game.
      * @param game The main game containing the different states of the
      *             game and their configuration.
-     * @param gamePanel The panel of the game where the components of
-     *                  different states are displayed.
      */
-    public PlayState(Game game, GamePanel gamePanel) {
+    public PlayState(Game game) {
         super(game);
-        this.gamePanel = gamePanel;
         levelManager = new LevelManager(game);
         tileManager = new TileManager();
         enemyManager = new EnemyManager(levelManager.getCurrentLevel());
         projectileManager = new ProjectileManager(levelManager.getCurrentLevel(), tileManager, enemyManager);
 
-        player = new Player(levelManager.getCurrentLevel().getPlayerXPosition(), levelManager.getCurrentLevel().getPlayerYPosition(), 36, 23, game.getEntityScale(), 1,4);
+        player = new Player(levelManager.getCurrentLevel().getPlayerCoordinate().x, levelManager.getCurrentLevel().getPlayerCoordinate().y, 36, 23, game.getEntityScale(), 1,4);
 
         pauseOverlay = new PauseOverlay(game, this, 570, 240);
         gameOverOverlay = new GameOverOverlay(game, this, 570, 160);
@@ -105,17 +100,17 @@ public class PlayState extends State implements StateMethods {
 
     @Override
     public void render(Graphics graphics) {
+        levelManager.renderLevel(graphics, xOffset, yOffset);
+        enemyManager.renderEnemies((Graphics2D) graphics, xOffset, yOffset);
+        projectileManager.renderPlayerProjectiles((Graphics2D) graphics, xOffset, yOffset);
+        if (isPaused && !player.isDead()) pauseOverlay.renderOverlay((Graphics2D) graphics);
+        if (player.isDead()) gameOverOverlay.renderOverlay((Graphics2D) graphics);
         if (isLoading) {
             loading.renderLoading(graphics, levelManager.getCurrentLevel().getLevelDimension());
         } else {
             updateOffsetsFromPlayer();
             player.renderEntity((Graphics2D) graphics, xOffset, yOffset);
         }
-        levelManager.renderLevel(graphics, xOffset, yOffset);
-        enemyManager.renderEnemies((Graphics2D) graphics, xOffset, yOffset);
-        projectileManager.renderPlayerProjectiles((Graphics2D) graphics, xOffset, yOffset);
-        if (isPaused && !player.isDead()) pauseOverlay.renderOverlay((Graphics2D) graphics);
-        if (player.isDead()) gameOverOverlay.renderOverlay((Graphics2D) graphics);
     }
 
     @Override
@@ -133,17 +128,13 @@ public class PlayState extends State implements StateMethods {
                 case TRANSITION -> {
                     // Determine xOffsetSpeed and yOffsetSpeed if not yet set.
                     if (loading.getxOffsetSpeed() == 0 && loading.getyOffsetSpeed() == 0) {
-                        loading.setOffsetSpeeds(loading.getxLoadingPosition(), loading.getyLoadingPosition(), currentLevel.getPlayerXPosition(), currentLevel.getPlayerYPosition());
+                        Point destinationCoordinate = getScreenDestination(currentLevel.getPlayerCoordinate(), currentLevel.getLevelDimension(), new Dimension(game.getScreenWidth(), game.getScreenHeight()));
+                        loading.setOffsetSpeeds(loading.getxLoadingPosition(), loading.getyLoadingPosition(), destinationCoordinate.x, destinationCoordinate.y);
                     }
-                    updateOffsetFromLoading(loading.getxOffsetSpeed(), loading.getyOffsetSpeed());
+                    updateOffsetFromLoading(loading.getxOffsetSpeed(), loading.getyOffsetSpeed(), currentLevel.getLevelDimension());
                 }
-                case END -> {
-                    loading.updateAlphaValue(true);
-                    // wait for x seconds
-                }
-                case NONE -> {
-                     isLoading = false;
-                }
+                case END ->  loading.updateAlphaValue(true);
+                case NONE -> isLoading = false;
             }
         }
         if (!isLoading) {
@@ -168,9 +159,9 @@ public class PlayState extends State implements StateMethods {
      * the game based on the position of the loading text from the center
      * of the level and the position of the player from the level.
      */
-    private void updateOffsetFromLoading(double xOffsetSpeed, double yOffsetSpeed) {
-        xOffset += xOffsetSpeed;
-        yOffset += yOffsetSpeed;
+    private void updateOffsetFromLoading(double xOffsetSpeed, double yOffsetSpeed, Dimension levelDimension) {
+        if (!(xOffset + xOffsetSpeed  + game.getScreenWidth() > levelDimension.width) && !(xOffset + xOffsetSpeed < 0)) xOffset += xOffsetSpeed;
+        if (!(yOffset + yOffsetSpeed  + game.getScreenHeight() > levelDimension.height) && !(yOffset + yOffsetSpeed < 0)) yOffset += yOffsetSpeed;
     }
 
     /**
@@ -180,9 +171,6 @@ public class PlayState extends State implements StateMethods {
      * as it is displayed on the game screen.
      */
     private void updateOffsetsFromPlayer() {
-        /*
-
-        */
         float playerXPos = player.getEntityCoordinate().x + player.getxHitBoxDelta();
         double xDiff = playerXPos - xOffset;
 
