@@ -55,14 +55,14 @@ public class Game implements Runnable{
      * resetPlayState creates a new PlayState of the game.
      */
     public void resetPlayState() {
-        playState = new PlayState(this, gamePanel);
+        playState = new PlayState(this);
     }
 
     /**
      * initStates | Initializes the component states of the game.
      */
     private void initStates() {
-        playState = new PlayState(this, gamePanel);
+        playState = new PlayState(this);
         menuState = new MenuState(this);
         creditsState = new CreditsState(this);
     }
