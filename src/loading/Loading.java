@@ -6,8 +6,7 @@ import utility.Atlas;
 
 import java.awt.*;
 
-import static utility.LoadingUtils.getLoadingTextCenterXPosition;
-import static utility.LoadingUtils.getLoadingTextCenterYPosition;
+import static utility.LoadingUtils.*;
 
 /**
  * Loading is a class that stores the components of the
@@ -76,8 +75,8 @@ public class Loading {
         * available at the constructor.
         * */
         if(!isPositionSet) {
-            xLoadingPosition = getLoadingTextCenterXPosition(loadingText, font, graphics, (int) levelDimension.getWidth());
-            yLoadingPosition = getLoadingTextCenterYPosition(loadingText, font, graphics, (int) levelDimension.getHeight());
+            xLoadingPosition = levelDimension.width/2 - game.getScreenWidth()/2;
+            yLoadingPosition = levelDimension.height/2 - game.getScreenHeight()/2;
             isPositionSet = true;
         }
     }
@@ -104,7 +103,7 @@ public class Loading {
      * @param transitionToOpacity The condition for if the text is transitioning to opacity.
      */
     public void updateAlphaValue(boolean transitionToOpacity) {
-        double time = transitionToOpacity ? 3 * game.getUPS() : 2 * game.getUPS(); // UPS of game x duration in second
+        double time = transitionToOpacity ? 3 * game.getCurrentUpdates() : 2 * game.getCurrentUpdates(); // UPS of game x duration in second
         double speed = (255) / time;
         alphaValue += transitionToOpacity ? -speed : speed;
         if (alphaValue < 0) alphaValue = 0;
@@ -123,11 +122,9 @@ public class Loading {
         double deltaX = endX - startX;
         double deltaY = endY - startY;
         double direction = Math.atan2(deltaY, deltaX);
-        System.out.println("x speed: " + Math.abs(deltaX) / 600.0);
-        System.out.println("y speed: " + Math.abs(deltaY) / 600.0);
 
-        xOffsetSpeed = (Math.abs(deltaX) / 2200.0) * Math.cos(direction);
-        yOffsetSpeed = (Math.abs(deltaY) / 2200.0) * Math.sin(direction);
+        xOffsetSpeed = (Math.abs(deltaX) / game.getCurrentUpdates()*.3) * Math.cos(direction);
+        yOffsetSpeed = (Math.abs(deltaY) / game.getCurrentUpdates()*.3) * Math.sin(direction);
 
         System.out.println("xOffsetSpeed : " + xOffsetSpeed + " yOffsetSpeed : " + yOffsetSpeed);
     }
