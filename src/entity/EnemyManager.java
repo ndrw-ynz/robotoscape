@@ -40,7 +40,7 @@ public class EnemyManager {
                     case "drone" -> enemyList.add(new Drone(coordinate.x, coordinate.y, 16, 16, 10, 2.5f, 1, 1));
                     case "robot_air" -> enemyList.add(new RobotAir(coordinate.x, coordinate.y, 16, 16, 8, 2.5f, 2, 4));
                     case "robot_ground" -> enemyList.add(new RobotGround(coordinate.x, coordinate.y-9, 16, 16, 10, 2.5f, 3,6));
-                    case "skull_slime" -> enemyList.add(new SkullSlime(coordinate.x, coordinate.y-9, 16, 16, 4, 2.5f, 2, 5));
+                    case "skull_slime" -> enemyList.add(new SkullSlime(coordinate.x, coordinate.y-9, 16, 16, 4, 2.5f, 2, 3));
                     case "turret" -> enemyList.add(new Turret(coordinate.x, coordinate.y, 16, 16, 12, 2.5f, 1, 1));
                 }
             }
