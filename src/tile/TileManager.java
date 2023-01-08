@@ -15,7 +15,7 @@ public class TileManager {
     /**Stores tile data used in building levels in a Tile array.*/
     private Tile[] mapTilesMonochrome;
     /**Stores a list of tiles that don't have collision properties.*/
-    public static final ArrayList<Integer> tileMonochromeNonCollisions = new ArrayList<>(Arrays.asList(0,4,5,16,17,18,19,20,24,25,26,37,38,39,40,53,54,59,122,140,141,142,166,188,207,208,209,288));
+    public static final ArrayList<Integer> tileMonochromeNonCollisions = new ArrayList<>(Arrays.asList(0,3,4,5,16,17,18,19,20,23,24,25,26,37,38,39,40,43,53,54,59,122,140,141,142,166,188,207,208,209,288));
     public static final ArrayList<Integer> tileMonochromeDamage = new ArrayList<>(Arrays.asList(122, 166));
     /**
      * TileManager | Initializes the tile manager of the game.
@@ -37,7 +37,8 @@ public class TileManager {
                 int index = row * 20 + col;
                 boolean allowCollision = !tileMonochromeNonCollisions.contains(index);
                 boolean dealsDamage = tileMonochromeDamage.contains(index);
-                mapTilesMonochrome[index] = new Tile(monochromeTilesetImage.getSubimage(col * 16, row * 16, 16, 16), allowCollision, dealsDamage);
+                boolean isDoor = index == 59; // 59 is the index determining whether the tile is a door.
+                mapTilesMonochrome[index] = new Tile(monochromeTilesetImage.getSubimage(col * 16, row * 16, 16, 16), allowCollision, dealsDamage, isDoor);
             }
         }
     }
