@@ -71,13 +71,31 @@ public abstract class PlayUtils {
      * @param levelData     A 2D array containing the data of the level's tiles value.
      * @return              Returns a boolean value.
      */
-    public static boolean isSpike(float x, float y, Level level, Tile[] mapTiles, int[][] levelData) {
+    private static boolean isSpike(float x, float y, Level level, Tile[] mapTiles, int[][] levelData) {
         if (x < 0 || x >= level.getLevelWidthTiles() * 32 || y < 0 || y >= level.getLevelHeightTiles() * 32) {
             return true;
         }
         int xIndex = (int) x / 32;
         int yIndex = (int) y / 32;
         return mapTiles[levelData[yIndex][xIndex]].dealsDamage();
+    }
+
+    /**
+     * isDoor determines if the tile on a given cartesian coordinate is a door.
+     * @param x             The x-coordinate position in the current game screen.
+     * @param y             The y-coordinate position in the current game screen.
+     * @param level         The current level of the game.
+     * @param mapTiles      An array of Tile containing the map tiles.
+     * @param levelData     A 2D array containing the data of the level's tiles value.
+     * @return              Returns a boolean value.
+     */
+    private static boolean isDoor(float x, float y, Level level, Tile[] mapTiles, int[][] levelData) {
+        if (x < 0 || x >= level.getLevelWidthTiles() * 32 || y < 0 || y >= level.getLevelHeightTiles() * 32) {
+            return true;
+        }
+        int xIndex = (int) x / 32;
+        int yIndex = (int) y / 32;
+        return mapTiles[levelData[yIndex][xIndex]].isDoor();
     }
 
     /**
@@ -235,5 +253,34 @@ public abstract class PlayUtils {
         boolean isBottomRightSpike = isSpike(entityRightX, entityBottomY, level, mapTiles, levelData);
 
         return isTopLeftSpike || isTopRightSpike || isBottomLeftSpike || isBottomRightSpike;
+    }
+
+    /**
+     * isPlayerOnDoor determines if the player entity is on a door on the game screen.
+     * @param xPos          The x-coordinate position in the current game screen.
+     * @param yPos          The y-coordinate position in the current game screen.
+     * @param player        The player of the game.
+     * @param level         The current level of the game.
+     * @param tileManager   The TileManager containing data about the tiles of the game/level.
+     * @return              Returns a boolean value.
+     */
+    public static boolean isPlayerOnDoor(float xPos, float yPos, Player player, Level level, TileManager tileManager) {
+        float playerScale = player.getEntityScale();
+        Rectangle.Float entityHitBox = player.getHitBox();
+
+        float playerLeftX = xPos + player.getxHitBoxDelta();
+        float playerRightX = playerLeftX + entityHitBox.width*playerScale;
+        float playerTopY = yPos + player.getyHitBoxDelta();
+        float playerBottomY = playerTopY + entityHitBox.height*playerScale;
+
+        int[][] levelData = level.getLevelData();
+        Tile[] mapTiles = tileManager.getMapTilesMonochrome();
+
+        boolean isTopLeftDoor = isDoor(playerLeftX, playerTopY, level, mapTiles, levelData);
+        boolean isTopRightDoor = isDoor(playerRightX, playerTopY, level, mapTiles, levelData);
+        boolean isBottomLeftDoor = isDoor(playerLeftX, playerBottomY, level, mapTiles, levelData);
+        boolean isBottomRightDoor = isDoor(playerRightX, playerBottomY, level, mapTiles, levelData);
+
+        return isTopLeftDoor || isTopRightDoor || isBottomLeftDoor || isBottomRightDoor;
     }
 }
