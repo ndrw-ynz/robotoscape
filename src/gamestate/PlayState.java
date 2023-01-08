@@ -19,6 +19,7 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 
 import static utility.LoadingUtils.getScreenDestination;
+import static utility.PlayUtils.isPlayerOnDoor;
 
 /**
  * The PlayState class extends the State class and implements
@@ -29,15 +30,15 @@ import static utility.LoadingUtils.getScreenDestination;
  */
 public class PlayState extends State implements StateMethods {
     /**The player that is controlled by the user in the game.*/
-    private final Player player;
+    private Player player;
     /**Manages the levels of the game and its state.*/
     private final LevelManager levelManager;
     /**Manages the tiles used in the game.*/
-    private final TileManager tileManager;
+    private TileManager tileManager;
     /**Manages the enemies in the current level of the game.*/
-    private final EnemyManager enemyManager;
+    private EnemyManager enemyManager;
     /**Manages the projectiles in the current level of the game.*/
-    private final ProjectileManager projectileManager;
+    private ProjectileManager projectileManager;
     /**Manages the loading screen of the game as introduced before the level starts.*/
     private Loading loading;
     /**Manages the pause overlay screen of the game.*/
@@ -51,7 +52,7 @@ public class PlayState extends State implements StateMethods {
     /**The offset of the player as it reaches the border on the x-axis of the game screen.*/
     private double xOffset;
     /**The maximum value of offset of the player in the x-axis of the game screen.*/
-    private final int maxXOffset;
+    private int maxXOffset;
     /**The x-coordinate for the left border of the player on the game screen.*/
     private final int leftBorder;
     /**The x-coordinate for the right border of the player on the game screen.*/
@@ -59,14 +60,14 @@ public class PlayState extends State implements StateMethods {
     /** The offset of the player as it reaches the border on the y-axis of the game screen.*/
     private double yOffset;
     /**The maximum value of offset of the player in the y-axis of the game screen.*/
-    private final int maxYOffset;
+    private int maxYOffset;
     /**The y-coordinate for the upper border of the player on the game screen.*/
     private final int upBorder;
     /**The y-coordinate for the lower border of the player on the game screen.*/
     private final int downBorder;
 
     /**
-     * PlayState | Initializes the play state of the game.
+     * PlayState initializes the play state of the game.
      * @param game The main game containing the different states of the
      *             game and their configuration.
      */
@@ -98,19 +99,38 @@ public class PlayState extends State implements StateMethods {
         maxYOffset = (levelHeightTiles - screenHeight/tileSize)*tileSize;
     }
 
+    private void restartPlayState() {
+        tileManager = new TileManager();
+        enemyManager = new EnemyManager(levelManager.getCurrentLevel());
+        projectileManager = new ProjectileManager(levelManager.getCurrentLevel(), tileManager, enemyManager);
+
+        player = new Player(levelManager.getCurrentLevel().getPlayerCoordinate().x, levelManager.getCurrentLevel().getPlayerCoordinate().y, 36, 23, game.getEntityScale(), 1,4);
+
+        int levelWidthTiles = levelManager.getCurrentLevel().getLevelWidthTiles();
+        int levelHeightTiles =  levelManager.getCurrentLevel().getLevelHeightTiles();
+
+        int screenWidth = game.getScreenWidth();
+        int screenHeight = game.getScreenHeight();
+        int tileSize = game.getTileSize();
+
+        maxXOffset = (levelWidthTiles - screenWidth/tileSize)*tileSize;
+        maxYOffset = (levelHeightTiles - screenHeight/tileSize)*tileSize;
+    }
+
+
     @Override
     public void render(Graphics graphics) {
         levelManager.renderLevel(graphics, xOffset, yOffset);
         enemyManager.renderEnemies((Graphics2D) graphics, xOffset, yOffset);
         projectileManager.renderPlayerProjectiles((Graphics2D) graphics, xOffset, yOffset);
-        if (isPaused && !player.isDead()) pauseOverlay.renderOverlay((Graphics2D) graphics);
-        if (player.isDead()) gameOverOverlay.renderOverlay((Graphics2D) graphics);
         if (isLoading) {
             loading.renderLoading(graphics, levelManager.getCurrentLevel().getLevelDimension());
         } else {
             updateOffsetsFromPlayer();
             player.renderEntity((Graphics2D) graphics, xOffset, yOffset);
         }
+        if (player.isDead()) gameOverOverlay.renderOverlay((Graphics2D) graphics);
+        if (isPaused && !player.isDead()) pauseOverlay.renderOverlay((Graphics2D) graphics);
     }
 
     @Override
@@ -140,13 +160,12 @@ public class PlayState extends State implements StateMethods {
         if (!isLoading) {
             player.updateEntity(levelManager.getCurrentLevel(), tileManager);
         }
-//        levelManager.updateLevel();
         enemyManager.updateEnemies(levelManager.getCurrentLevel(), tileManager, player);
         projectileManager.updatePlayerProjectiles();
     }
 
     /**
-     * initLoading | Initializes loading instance of the game and sets
+     * initLoading initializes loading instance of the game and sets
      * isLoading to true.
      */
     public void initLoading() {
@@ -155,7 +174,7 @@ public class PlayState extends State implements StateMethods {
     }
 
     /**
-     * updateOffsetsFromLoading | Updates the xOffset and yOffset of
+     * updateOffsetsFromLoading updates the xOffset and yOffset of
      * the game based on the position of the loading text from the center
      * of the level and the position of the player from the level.
      */
@@ -165,7 +184,7 @@ public class PlayState extends State implements StateMethods {
     }
 
     /**
-     * updateOffsetsFromPlayer | Updates the xOffset and yOffset of the player on
+     * updateOffsetsFromPlayer updates the xOffset and yOffset of the player on
      * the game as it moves towards the x-axis and y-axis border of the
      * game screen and applies the offset on the components of the game,
      * as it is displayed on the game screen.
@@ -256,8 +275,18 @@ public class PlayState extends State implements StateMethods {
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_ESCAPE -> isPaused = !isPaused;
-            case KeyEvent.VK_ENTER -> isLoading = false;
-            case KeyEvent.VK_SPACE -> player.setIsJumping(true);
+            case KeyEvent.VK_ENTER -> {
+                isLoading = false;
+                if (isPlayerOnDoor(player.getEntityCoordinate().x, player.getEntityCoordinate().y, player, levelManager.getCurrentLevel(), tileManager)) {
+                    levelManager.incrementLevel();
+                    restartPlayState();
+                    initLoading();
+                }
+            }
+            case KeyEvent.VK_SPACE -> {
+                isLoading = false;
+                player.setIsJumping(true);
+            }
             case KeyEvent.VK_A -> player.setIsMovingLeft(true);
             case KeyEvent.VK_D -> player.setIsMovingRight(true);
         }
