@@ -44,7 +44,14 @@ public class LevelManager {
 
         for (int row = 0; row < levelHeight; row++) {
             for (int col = 0; col < levelWidth; col++) {
-                graphics.drawImage(mapTiles[levelData[row][col]].getImage(), (int) (game.getTileSize()*col-xOffset), (int) (game.getTileSize()*row-yOffset), game.getTileSize(), game.getTileSize(), null);
+                int tileSize = game.getTileSize();
+                int x = (int) (game.getTileSize()*col-xOffset);
+                int y = (int) (game.getTileSize()*row-yOffset);
+                if (mapTiles[levelData[row][col]].isDoor()) {
+                    tileSize *= 1.5;
+                    y -= 16;
+                }
+                graphics.drawImage(mapTiles[levelData[row][col]].getImage(), x, y, tileSize, tileSize, null);
             }
         }
     }
@@ -52,7 +59,7 @@ public class LevelManager {
     /**
      * updateLevel increments the current level of the game by one level.
      */
-    public void updateLevel() {
+    public void incrementLevel() {
         currentLevel = new Level(game, currentLevel.getLevelNumber()+1);
     }
 
