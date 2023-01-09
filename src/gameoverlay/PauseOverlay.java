@@ -21,6 +21,8 @@ public class PauseOverlay extends Overlay{
     private final RegularText pauseText;
     /**The interactive continue text of the pause overlay.*/
     private final InteractiveText continueText;
+    /**The interactive restart text of the pause overlay.*/
+    private final InteractiveText restartText;
     /**The interactive exit text of the pause overlay.*/
     private final InteractiveText exitText;
 
@@ -41,20 +43,23 @@ public class PauseOverlay extends Overlay{
         int textYStart = ((game.getScreenHeight() - textSpaceHeight)/2 + textSpacePadding);
 
         this.pauseText = new RegularText(textYStart, "Game Paused", bigTextHeight, 200, Atlas.TARRGET_FONT);
-        this.continueText = new InteractiveText(textYStart+allocatedMainSpacing, "continue", selectionsTextHeight, 200, Atlas.TARRGET_FONT);
-        this.exitText = new InteractiveText(textYStart+allocatedMainSpacing+selectionsTextHeight+20, "Exit", selectionsTextHeight, 200, Atlas.TARRGET_FONT);
+        this.continueText = new InteractiveText(textYStart+allocatedMainSpacing, "Continue", selectionsTextHeight, 200, Atlas.TARRGET_FONT);
+        this.restartText = new InteractiveText(textYStart+allocatedMainSpacing+selectionsTextHeight+10, "Restart", selectionsTextHeight, 200, Atlas.TARRGET_FONT);
+        this.exitText = new InteractiveText(textYStart+allocatedMainSpacing+selectionsTextHeight*2+20, "Exit", selectionsTextHeight, 200, Atlas.TARRGET_FONT);
     }
 
     @Override
     protected void drawOverlayText(Graphics2D graphics) {
         pauseText.renderText(graphics, game.getScreenWidth());
         continueText.renderText(graphics, game.getScreenWidth());
+        restartText.renderText(graphics, game.getScreenWidth());
         exitText.renderText(graphics, game.getScreenWidth());
     }
 
     @Override
     public void updateInteractiveText(int x, int y) {
         if (continueText.isBoundaryBoxSet()) continueText.setIsActive(isWithinBoundary(x, y, continueText.getBoundaryBox()));
+        if (restartText.isBoundaryBoxSet()) restartText.setIsActive(isWithinBoundary(x, y, restartText.getBoundaryBox()));
         if (exitText.isBoundaryBoxSet()) exitText.setIsActive(isWithinBoundary(x, y, exitText.getBoundaryBox()));
     }
 
@@ -62,7 +67,12 @@ public class PauseOverlay extends Overlay{
     public void updateState() {
         if (continueText.isActive()) {
             playState.setIsPaused(false);
-        } else if (exitText.isActive()) {
+        }
+        if (restartText.isActive()) {
+            playState.restartPlayState();
+            playState.setIsPaused(false);
+        }
+        if (exitText.isActive()) {
             GameState.state = GameState.MENU;
             game.resetPlayState();
         }
