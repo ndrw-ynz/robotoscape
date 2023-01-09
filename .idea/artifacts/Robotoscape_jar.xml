@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Robotoscape:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Robotoscape_jar</output-path>
+    <root id="archive" name="Robotoscape.jar">
+      <element id="module-output" name="Robotoscape" />
+    </root>
+  </artifact>
+</component>
