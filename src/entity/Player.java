@@ -109,7 +109,6 @@ public class Player extends Entity {
                 hitBoxHeight = 22;
             }
             case "dash" -> {
-                // TODO: Configure how dash animation is displayed.
                 hitBoxWidth = 21;
                 hitBoxHeight = 23;
                 xHitBoxDelta = 28;
@@ -231,7 +230,7 @@ public class Player extends Entity {
         }
         gunPointCoordinate.y = entityCoordinate.y + 8;
 
-        if (gunShootCounter > 2) {
+        if (gunShootCounter > 1) {
             gunShootCounter = 0;
             isGunOnCoolDown = false;
         }

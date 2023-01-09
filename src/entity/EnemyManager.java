@@ -54,7 +54,6 @@ public class EnemyManager {
      * @param yOffset The y-value offset of the entity on the game screen.
      */
     public void renderEnemies(Graphics2D graphics, double xOffset, double yOffset) {
-        enemyList.removeIf(Entity::isDead);
         for (Enemy enemy: enemyList) {
             enemy.renderEntity(graphics, xOffset, yOffset);
 //            enemy.renderAttentionArea(graphics, xOffset, yOffset);
