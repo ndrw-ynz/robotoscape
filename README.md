@@ -5,13 +5,13 @@ Robotoscape is a 2D Platformer game developed in Java using Swing and AWT.
 In the game, you get to play as a robot trying to escape while trying to avoid obstacles and aggressive enemies on each level of the game. You can attempt to stealthily avoid your enemies and escape from each level of the game or destroy the enemies on your path by firing fire projectiles with your trusty handgun weapon by your side. The game currently has 5 playable levels. The game may or may not be subjected to changes in the future.
 
 ## Installation
-The game can be played by downloading `Robotoscape.jar` and running the executable file in your local directory.
+The game can be played by downloading `Robotoscape.jar` and running the executable jar file in your local directory.
 ## Controls
-W Key - Jump
-
 A Key - Move Left
 
 D Key - Move Right
+
+Space Bar Key - Jump
 
 Left Mouse Click - Shoot Fire Projectile
 
