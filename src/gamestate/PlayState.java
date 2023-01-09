@@ -80,8 +80,8 @@ public class PlayState extends State implements StateMethods {
 
         player = new Player(levelManager.getCurrentLevel().getPlayerCoordinate().x, levelManager.getCurrentLevel().getPlayerCoordinate().y, 36, 23, game.getEntityScale(), 1,4);
 
-        pauseOverlay = new PauseOverlay(game, this, 570, 240);
-        gameOverOverlay = new GameOverOverlay(game, this, 570, 160);
+        pauseOverlay = new PauseOverlay(game, this, 570, 260);
+        gameOverOverlay = new GameOverOverlay(game, this, 540, 240);
 
         int levelWidthTiles = levelManager.getCurrentLevel().getLevelWidthTiles();
         int levelHeightTiles =  levelManager.getCurrentLevel().getLevelHeightTiles();
@@ -99,7 +99,7 @@ public class PlayState extends State implements StateMethods {
         maxYOffset = (levelHeightTiles - screenHeight/tileSize)*tileSize;
     }
 
-    private void restartPlayState() {
+    public void restartPlayState() {
         tileManager = new TileManager();
         enemyManager = new EnemyManager(levelManager.getCurrentLevel());
         projectileManager = new ProjectileManager(levelManager.getCurrentLevel(), tileManager, enemyManager);
