@@ -17,6 +17,8 @@ public class Loading {
     private final Game game;
     /**The loading text to be displayed on the game screen.*/
     private final String loadingText;
+    /**Counter used to create blinking effect on loading text.*/
+    private float blinkingCounter;
     /**The alpha value of the loading text, altered during start and end phase of loading phase.*/
     private double alphaValue;
     /**The x-coordinate position of the loading text at the designated x-axis position of the loading text*/
@@ -62,8 +64,10 @@ public class Loading {
      * @param levelDimension The dimension of the current level of the game.
      */
     public void renderLoading(Graphics graphics, Dimension levelDimension) {
+        blinkingCounter += 0.5;
+        if (blinkingCounter > 5) blinkingCounter = 0;
         Font font = Atlas.getFont(Atlas.ROBUS_FONT).deriveFont(Font.PLAIN, 100);
-        Color color = new Color(255, 255, 255, (int) alphaValue);
+        Color color = blinkingCounter < 2.5 ? new Color(255, 255, 0, (int) alphaValue) : new Color(255, 0, 255, (int) alphaValue);
         int x = getLoadingTextCenterXPosition(loadingText, font, graphics, game.getScreenWidth());
         int y = getLoadingTextCenterYPosition(loadingText, font, graphics, game.getScreenHeight());
         graphics.setFont(font);
